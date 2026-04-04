@@ -1,15 +1,8 @@
---[[
-    Fling System v6 by milkaqyyy
-    - Dual Anti-Fling modes (toggleable)
-    - Adjustable fling power slider
-    - Dark theme with blue tones
-    - Collapsible menu
-]]
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
+local Lighting = game:GetService("Lighting")
 local LocalPlayer = Players.LocalPlayer
 local StarterGui = game:GetService("StarterGui")
 
@@ -22,46 +15,95 @@ pcall(function()
     end
 end)
 
+-- Создаём временный Blur для проверки поддержки
+local function IsBlurSupported()
+    local testBlur = Instance.new("BlurEffect")
+    local supported = pcall(function()
+        testBlur.Parent = Lighting
+        testBlur.Enabled = true
+        task.wait(0.1)
+        testBlur.Enabled = false
+    end)
+    testBlur:Destroy()
+    return supported
+end
+
+local blurSupported = IsBlurSupported()
+print("Blur supported:", blurSupported)
+
 -- Create GUI
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "FlingGUI"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Main window (темно-синяя тема)
+-- Добавляем размытие на уровень GUI (правильный способ)
+local BackgroundBlur = Instance.new("Frame")
+BackgroundBlur.Size = UDim2.new(1, 0, 1, 0)
+BackgroundBlur.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+BackgroundBlur.BackgroundTransparency = 0.6
+BackgroundBlur.BorderSizePixel = 0
+BackgroundBlur.Parent = ScreenGui
+
+local BackgroundCorner = Instance.new("UICorner")
+BackgroundCorner.CornerRadius = UDim.new(0, 20)
+BackgroundCorner.Parent = BackgroundBlur
+
+-- Если размытие поддерживается - добавляем его
+if blurSupported then
+    local guiBlur = Instance.new("BlurEffect")
+    guiBlur.Size = 18
+    guiBlur.Parent = ScreenGui
+end
+
+-- ============ GLASSMORPHISM MAIN FRAME ============
 local MainFrame = Instance.new("Frame")
 MainFrame.Size = UDim2.new(0, 420, 0, 700)
 MainFrame.Position = UDim2.new(0.5, -210, 0.5, -335)
-MainFrame.BackgroundColor3 = Color3.fromRGB(28, 30, 36)
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 25, 35)
+MainFrame.BackgroundTransparency = 0.75
 MainFrame.BorderSizePixel = 0
 MainFrame.ClipsDescendants = true
 MainFrame.Active = true
 MainFrame.Draggable = true
 MainFrame.Parent = ScreenGui
 
-local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 12)
-MainCorner.Parent = MainFrame
-
 -- Тень
 local Shadow = Instance.new("Frame")
-Shadow.Size = UDim2.new(1, 0, 1, 0)
-Shadow.Position = UDim2.new(0, 0, 0, 0)
+Shadow.Size = UDim2.new(1, 10, 1, 10)
+Shadow.Position = UDim2.new(0, -5, 0, -5)
 Shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-Shadow.BackgroundTransparency = 0.75
+Shadow.BackgroundTransparency = 0.7
 Shadow.BorderSizePixel = 0
 Shadow.ZIndex = -1
 Shadow.Parent = MainFrame
 
--- Title bar
+local ShadowCorner = Instance.new("UICorner")
+ShadowCorner.CornerRadius = UDim.new(0, 16)
+ShadowCorner.Parent = Shadow
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 16)
+MainCorner.Parent = MainFrame
+
+-- Обводка
+local Stroke = Instance.new("UIStroke")
+Stroke.Thickness = 1.5
+Stroke.Color = Color3.fromRGB(255, 255, 255)
+Stroke.Transparency = 0.3
+Stroke.Parent = MainFrame
+
+-- Title Bar
 local TitleBar = Instance.new("Frame")
 TitleBar.Size = UDim2.new(1, 0, 0, 50)
-TitleBar.BackgroundColor3 = Color3.fromRGB(35, 37, 45)
+TitleBar.BackgroundColor3 = Color3.fromRGB(30, 35, 45)
+TitleBar.BackgroundTransparency = 0.85
 TitleBar.BorderSizePixel = 0
 TitleBar.Parent = MainFrame
 
 local TitleCorner = Instance.new("UICorner")
-TitleCorner.CornerRadius = UDim.new(0, 12)
+TitleCorner.CornerRadius = UDim.new(0, 16)
 TitleCorner.Parent = TitleBar
 
 local TitleLabel = Instance.new("TextLabel")
@@ -91,7 +133,8 @@ AuthorLabel.Parent = TitleBar
 local CollapseButton = Instance.new("TextButton")
 CollapseButton.Position = UDim2.new(1, -65, 0, 12)
 CollapseButton.Size = UDim2.new(0, 26, 0, 26)
-CollapseButton.BackgroundColor3 = Color3.fromRGB(50, 52, 60)
+CollapseButton.BackgroundColor3 = Color3.fromRGB(45, 50, 60)
+CollapseButton.BackgroundTransparency = 0.5
 CollapseButton.BorderSizePixel = 0
 CollapseButton.Text = "▼"
 CollapseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -108,6 +151,7 @@ local CloseButton = Instance.new("TextButton")
 CloseButton.Position = UDim2.new(1, -35, 0, 12)
 CloseButton.Size = UDim2.new(0, 26, 0, 26)
 CloseButton.BackgroundColor3 = Color3.fromRGB(200, 60, 60)
+CloseButton.BackgroundTransparency = 0.3
 CloseButton.BorderSizePixel = 0
 CloseButton.Text = "X"
 CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -120,15 +164,18 @@ CloseCorner.CornerRadius = UDim.new(1, 0)
 CloseCorner.Parent = CloseButton
 
 -- Hover effects
-local function AddHoverEffect(button, darkenColor, originalColor)
+local function AddGlassHoverEffect(button, darkenColor, originalColor, originalTrans)
     if not originalColor then
         originalColor = button.BackgroundColor3
     end
+    if not originalTrans then
+        originalTrans = button.BackgroundTransparency
+    end
     button.MouseEnter:Connect(function()
-        TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = darkenColor}):Play()
+        TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = darkenColor, BackgroundTransparency = math.min(originalTrans + 0.1, 0.9)}):Play()
     end)
     button.MouseLeave:Connect(function()
-        TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = originalColor}):Play()
+        TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = originalColor, BackgroundTransparency = originalTrans}):Play()
     end)
 end
 
@@ -145,7 +192,7 @@ StatusLabel.Position = UDim2.new(0, 15, 0, 10)
 StatusLabel.Size = UDim2.new(1, -30, 0, 30)
 StatusLabel.BackgroundTransparency = 1
 StatusLabel.Text = "Select targets"
-StatusLabel.TextColor3 = Color3.fromRGB(200, 200, 210)
+StatusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 StatusLabel.Font = Enum.Font.GothamBold
 StatusLabel.TextSize = 15
 StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -177,7 +224,8 @@ PowerValue.Parent = ContentContainer
 local PowerSlider = Instance.new("Frame")
 PowerSlider.Position = UDim2.new(0, 100, 0, 53)
 PowerSlider.Size = UDim2.new(1, -165, 0, 15)
-PowerSlider.BackgroundColor3 = Color3.fromRGB(45, 47, 55)
+PowerSlider.BackgroundColor3 = Color3.fromRGB(45, 50, 60)
+PowerSlider.BackgroundTransparency = 0.5
 PowerSlider.BorderSizePixel = 0
 PowerSlider.Parent = ContentContainer
 
@@ -188,6 +236,7 @@ PowerSliderCorner.Parent = PowerSlider
 local PowerFill = Instance.new("Frame")
 PowerFill.Size = UDim2.new(1, 0, 1, 0)
 PowerFill.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+PowerFill.BackgroundTransparency = 0.2
 PowerFill.BorderSizePixel = 0
 PowerFill.Parent = PowerSlider
 
@@ -199,6 +248,7 @@ local PowerButton = Instance.new("TextButton")
 PowerButton.Size = UDim2.new(0, 20, 1, 0)
 PowerButton.Position = UDim2.new(1, -10, 0, 0)
 PowerButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+PowerButton.BackgroundTransparency = 0.3
 PowerButton.BorderSizePixel = 0
 PowerButton.Text = ""
 PowerButton.Parent = PowerSlider
@@ -213,7 +263,7 @@ ModeLabel.Position = UDim2.new(0, 15, 0, 82)
 ModeLabel.Size = UDim2.new(0, 100, 0, 20)
 ModeLabel.BackgroundTransparency = 1
 ModeLabel.Text = "ANTI-FLING:"
-ModeLabel.TextColor3 = Color3.fromRGB(180, 180, 190)
+ModeLabel.TextColor3 = Color3.fromRGB(200, 200, 210)
 ModeLabel.Font = Enum.Font.GothamBold
 ModeLabel.TextSize = 12
 ModeLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -222,36 +272,34 @@ ModeLabel.Parent = ContentContainer
 local Mode1Button = Instance.new("TextButton")
 Mode1Button.Position = UDim2.new(0, 12, 0, 105)
 Mode1Button.Size = UDim2.new(0.48, -6, 0, 32)
-Mode1Button.BackgroundColor3 = Color3.fromRGB(50, 52, 60)
+Mode1Button.BackgroundColor3 = Color3.fromRGB(100, 180, 100)
+Mode1Button.BackgroundTransparency = 0.5
 Mode1Button.BorderSizePixel = 0
 Mode1Button.Text = "🛡️ MODE 1"
-Mode1Button.TextColor3 = Color3.fromRGB(220, 220, 230)
+Mode1Button.TextColor3 = Color3.fromRGB(255, 255, 255)
 Mode1Button.Font = Enum.Font.GothamBold
 Mode1Button.TextSize = 12
 Mode1Button.Parent = ContentContainer
 
 local Mode1Corner = Instance.new("UICorner")
-Mode1Corner.CornerRadius = UDim.new(0, 6)
+Mode1Corner.CornerRadius = UDim.new(0, 8)
 Mode1Corner.Parent = Mode1Button
 
 local Mode2Button = Instance.new("TextButton")
 Mode2Button.Position = UDim2.new(0.52, 0, 0, 105)
 Mode2Button.Size = UDim2.new(0.48, -6, 0, 32)
-Mode2Button.BackgroundColor3 = Color3.fromRGB(50, 52, 60)
+Mode2Button.BackgroundColor3 = Color3.fromRGB(45, 50, 60)
+Mode2Button.BackgroundTransparency = 0.5
 Mode2Button.BorderSizePixel = 0
 Mode2Button.Text = "🔰 MODE 2"
-Mode2Button.TextColor3 = Color3.fromRGB(220, 220, 230)
+Mode2Button.TextColor3 = Color3.fromRGB(200, 200, 210)
 Mode2Button.Font = Enum.Font.GothamBold
 Mode2Button.TextSize = 12
 Mode2Button.Parent = ContentContainer
 
 local Mode2Corner = Instance.new("UICorner")
-Mode2Corner.CornerRadius = UDim.new(0, 6)
+Mode2Corner.CornerRadius = UDim.new(0, 8)
 Mode2Corner.Parent = Mode2Button
-
--- Add hover effects for mode buttons
-AddHoverEffect(Mode1Button, Color3.fromRGB(65, 67, 75), Color3.fromRGB(50, 52, 60))
-AddHoverEffect(Mode2Button, Color3.fromRGB(65, 67, 75), Color3.fromRGB(50, 52, 60))
 
 -- Anti-Fling Status
 local AntiFlingStatus = Instance.new("TextLabel")
@@ -269,12 +317,13 @@ AntiFlingStatus.Parent = ContentContainer
 local ListFrame = Instance.new("Frame")
 ListFrame.Position = UDim2.new(0, 12, 0, 170)
 ListFrame.Size = UDim2.new(1, -24, 0, 370)
-ListFrame.BackgroundColor3 = Color3.fromRGB(35, 37, 45)
+ListFrame.BackgroundColor3 = Color3.fromRGB(25, 30, 40)
+ListFrame.BackgroundTransparency = 0.6
 ListFrame.BorderSizePixel = 0
 ListFrame.Parent = ContentContainer
 
 local ListCorner = Instance.new("UICorner")
-ListCorner.CornerRadius = UDim.new(0, 8)
+ListCorner.CornerRadius = UDim.new(0, 12)
 ListCorner.Parent = ListFrame
 
 local PlayerScroll = Instance.new("ScrollingFrame")
@@ -291,6 +340,7 @@ local StartButton = Instance.new("TextButton")
 StartButton.Position = UDim2.new(0, 12, 0, 555)
 StartButton.Size = UDim2.new(0.48, -6, 0, 38)
 StartButton.BackgroundColor3 = Color3.fromRGB(40, 180, 70)
+StartButton.BackgroundTransparency = 0.3
 StartButton.BorderSizePixel = 0
 StartButton.Text = "🔥 START FLING"
 StartButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -299,13 +349,14 @@ StartButton.TextSize = 14
 StartButton.Parent = ContentContainer
 
 local StartCorner = Instance.new("UICorner")
-StartCorner.CornerRadius = UDim.new(0, 8)
+StartCorner.CornerRadius = UDim.new(0, 10)
 StartCorner.Parent = StartButton
 
 local StopButton = Instance.new("TextButton")
 StopButton.Position = UDim2.new(0.52, 0, 0, 555)
 StopButton.Size = UDim2.new(0.48, -6, 0, 38)
 StopButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+StopButton.BackgroundTransparency = 0.3
 StopButton.BorderSizePixel = 0
 StopButton.Text = "🛑 STOP FLING"
 StopButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -314,46 +365,48 @@ StopButton.TextSize = 14
 StopButton.Parent = ContentContainer
 
 local StopCorner = Instance.new("UICorner")
-StopCorner.CornerRadius = UDim.new(0, 8)
+StopCorner.CornerRadius = UDim.new(0, 10)
 StopCorner.Parent = StopButton
 
 local SelectAllBtn = Instance.new("TextButton")
 SelectAllBtn.Position = UDim2.new(0, 12, 0, 600)
 SelectAllBtn.Size = UDim2.new(0.48, -6, 0, 32)
-SelectAllBtn.BackgroundColor3 = Color3.fromRGB(50, 52, 60)
+SelectAllBtn.BackgroundColor3 = Color3.fromRGB(45, 50, 60)
+SelectAllBtn.BackgroundTransparency = 0.5
 SelectAllBtn.BorderSizePixel = 0
 SelectAllBtn.Text = "✅ SELECT ALL"
-SelectAllBtn.TextColor3 = Color3.fromRGB(220, 220, 230)
+SelectAllBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 SelectAllBtn.Font = Enum.Font.GothamBold
 SelectAllBtn.TextSize = 12
 SelectAllBtn.Parent = ContentContainer
 
 local SelectAllCorner = Instance.new("UICorner")
-SelectAllCorner.CornerRadius = UDim.new(0, 6)
+SelectAllCorner.CornerRadius = UDim.new(0, 8)
 SelectAllCorner.Parent = SelectAllBtn
 
 local DeselectAllBtn = Instance.new("TextButton")
 DeselectAllBtn.Position = UDim2.new(0.52, 0, 0, 600)
 DeselectAllBtn.Size = UDim2.new(0.48, -6, 0, 32)
-DeselectAllBtn.BackgroundColor3 = Color3.fromRGB(50, 52, 60)
+DeselectAllBtn.BackgroundColor3 = Color3.fromRGB(45, 50, 60)
+DeselectAllBtn.BackgroundTransparency = 0.5
 DeselectAllBtn.BorderSizePixel = 0
 DeselectAllBtn.Text = "❌ DESELECT ALL"
-DeselectAllBtn.TextColor3 = Color3.fromRGB(220, 220, 230)
+DeselectAllBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 DeselectAllBtn.Font = Enum.Font.GothamBold
 DeselectAllBtn.TextSize = 12
 DeselectAllBtn.Parent = ContentContainer
 
 local DeselectCorner = Instance.new("UICorner")
-DeselectCorner.CornerRadius = UDim.new(0, 6)
+DeselectCorner.CornerRadius = UDim.new(0, 8)
 DeselectCorner.Parent = DeselectAllBtn
 
--- Add hover effects for action buttons
-AddHoverEffect(StartButton, Color3.fromRGB(30, 160, 60), Color3.fromRGB(40, 180, 70))
-AddHoverEffect(StopButton, Color3.fromRGB(180, 40, 40), Color3.fromRGB(200, 50, 50))
-AddHoverEffect(SelectAllBtn, Color3.fromRGB(65, 67, 75), Color3.fromRGB(50, 52, 60))
-AddHoverEffect(DeselectAllBtn, Color3.fromRGB(65, 67, 75), Color3.fromRGB(50, 52, 60))
-AddHoverEffect(CollapseButton, Color3.fromRGB(65, 67, 75), Color3.fromRGB(50, 52, 60))
-AddHoverEffect(CloseButton, Color3.fromRGB(180, 50, 50), Color3.fromRGB(200, 60, 60))
+-- Apply hover effects
+AddGlassHoverEffect(StartButton, Color3.fromRGB(30, 160, 60), Color3.fromRGB(40, 180, 70), 0.3)
+AddGlassHoverEffect(StopButton, Color3.fromRGB(180, 40, 40), Color3.fromRGB(200, 50, 50), 0.3)
+AddGlassHoverEffect(SelectAllBtn, Color3.fromRGB(65, 70, 80), Color3.fromRGB(45, 50, 60), 0.5)
+AddGlassHoverEffect(DeselectAllBtn, Color3.fromRGB(65, 70, 80), Color3.fromRGB(45, 50, 60), 0.5)
+AddGlassHoverEffect(CollapseButton, Color3.fromRGB(65, 70, 80), Color3.fromRGB(45, 50, 60), 0.5)
+AddGlassHoverEffect(CloseButton, Color3.fromRGB(180, 50, 50), Color3.fromRGB(200, 60, 60), 0.3)
 
 -- Variables
 local SelectedTargets = {}
@@ -527,7 +580,6 @@ local function PlayerAddedMode2(Player)
 end
 
 local function StartAntiFlingMode2()
-    -- Clean up old
     if LocalAntiFlingConnection then
         LocalAntiFlingConnection:Disconnect()
         LocalAntiFlingConnection = nil
@@ -540,21 +592,18 @@ local function StartAntiFlingMode2()
     end
     AntiFlingDetection = {}
     
-    -- Setup for existing players
     for _, plr in ipairs(Players:GetPlayers()) do
         if plr ~= LocalPlayer then
             PlayerAddedMode2(plr)
         end
     end
     
-    -- Setup for new players
     Players.PlayerAdded:Connect(function(plr)
         if plr ~= LocalPlayer then
             PlayerAddedMode2(plr)
         end
     end)
     
-    -- Local player anti-fling
     LocalAntiFlingConnection = RunService.Heartbeat:Connect(function()
         if CurrentAntiFlingMode ~= "MODE2" then return end
         pcall(function()
@@ -583,21 +632,21 @@ local function StartAntiFlingMode2()
     end)
 end
 
--- Switch anti-fling mode (toggle)
+-- Switch anti-fling mode
 local function ToggleMode1()
     if CurrentAntiFlingMode == "MODE1" then
-        -- Выключаем MODE 1
         if antiFlingConnection1 then
             antiFlingConnection1:Disconnect()
             antiFlingConnection1 = nil
         end
         CurrentAntiFlingMode = "OFF"
-        Mode1Button.BackgroundColor3 = Color3.fromRGB(50, 52, 60)
+        Mode1Button.BackgroundColor3 = Color3.fromRGB(45, 50, 60)
+        Mode1Button.BackgroundTransparency = 0.5
+        Mode1Button.TextColor3 = Color3.fromRGB(200, 200, 210)
         AntiFlingStatus.Text = "Anti-Fling: Disabled"
         AntiFlingStatus.TextColor3 = Color3.fromRGB(255, 100, 100)
         notify("Anti-Fling", "Mode 1 DISABLED")
     else
-        -- Включаем MODE 1, выключаем MODE 2 если был
         if CurrentAntiFlingMode == "MODE2" then
             if LocalAntiFlingConnection then
                 LocalAntiFlingConnection:Disconnect()
@@ -609,11 +658,15 @@ local function ToggleMode1()
                 end
             end
             AntiFlingDetection = {}
-            Mode2Button.BackgroundColor3 = Color3.fromRGB(50, 52, 60)
+            Mode2Button.BackgroundColor3 = Color3.fromRGB(45, 50, 60)
+            Mode2Button.BackgroundTransparency = 0.5
+            Mode2Button.TextColor3 = Color3.fromRGB(200, 200, 210)
         end
         CurrentAntiFlingMode = "MODE1"
         StartAntiFlingMode1()
         Mode1Button.BackgroundColor3 = Color3.fromRGB(100, 180, 100)
+        Mode1Button.BackgroundTransparency = 0.3
+        Mode1Button.TextColor3 = Color3.fromRGB(255, 255, 255)
         AntiFlingStatus.Text = "Mode 1: Active (Velocity Block)"
         AntiFlingStatus.TextColor3 = Color3.fromRGB(100, 255, 100)
         notify("Anti-Fling", "Mode 1 ENABLED")
@@ -622,7 +675,6 @@ end
 
 local function ToggleMode2()
     if CurrentAntiFlingMode == "MODE2" then
-        -- Выключаем MODE 2
         if LocalAntiFlingConnection then
             LocalAntiFlingConnection:Disconnect()
             LocalAntiFlingConnection = nil
@@ -634,22 +686,27 @@ local function ToggleMode2()
         end
         AntiFlingDetection = {}
         CurrentAntiFlingMode = "OFF"
-        Mode2Button.BackgroundColor3 = Color3.fromRGB(50, 52, 60)
+        Mode2Button.BackgroundColor3 = Color3.fromRGB(45, 50, 60)
+        Mode2Button.BackgroundTransparency = 0.5
+        Mode2Button.TextColor3 = Color3.fromRGB(200, 200, 210)
         AntiFlingStatus.Text = "Anti-Fling: Disabled"
         AntiFlingStatus.TextColor3 = Color3.fromRGB(255, 100, 100)
         notify("Anti-Fling", "Mode 2 DISABLED")
     else
-        -- Включаем MODE 2, выключаем MODE 1 если был
         if CurrentAntiFlingMode == "MODE1" then
             if antiFlingConnection1 then
                 antiFlingConnection1:Disconnect()
                 antiFlingConnection1 = nil
             end
-            Mode1Button.BackgroundColor3 = Color3.fromRGB(50, 52, 60)
+            Mode1Button.BackgroundColor3 = Color3.fromRGB(45, 50, 60)
+            Mode1Button.BackgroundTransparency = 0.5
+            Mode1Button.TextColor3 = Color3.fromRGB(200, 200, 210)
         end
         CurrentAntiFlingMode = "MODE2"
         StartAntiFlingMode2()
         Mode2Button.BackgroundColor3 = Color3.fromRGB(100, 180, 100)
+        Mode2Button.BackgroundTransparency = 0.3
+        Mode2Button.TextColor3 = Color3.fromRGB(255, 255, 255)
         AntiFlingStatus.Text = "Mode 2: Active (Advanced Detection)"
         AntiFlingStatus.TextColor3 = Color3.fromRGB(100, 255, 100)
         notify("Anti-Fling", "Mode 2 ENABLED")
@@ -671,7 +728,7 @@ local function UpdateStatus()
         StatusLabel.TextColor3 = Color3.fromRGB(255, 120, 120)
     else
         StatusLabel.Text = "📋 Selected targets: " .. count
-        StatusLabel.TextColor3 = Color3.fromRGB(200, 200, 210)
+        StatusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     end
 end
 
@@ -695,24 +752,26 @@ local function RefreshPlayerList()
             local item = Instance.new("Frame")
             item.Size = UDim2.new(1, -10, 0, 38)
             item.Position = UDim2.new(0, 5, 0, yOffset)
-            item.BackgroundColor3 = Color3.fromRGB(42, 44, 52)
+            item.BackgroundColor3 = Color3.fromRGB(35, 40, 50)
+            item.BackgroundTransparency = 0.6
             item.BorderSizePixel = 0
             item.Parent = PlayerScroll
 
             local itemCorner = Instance.new("UICorner")
-            itemCorner.CornerRadius = UDim.new(0, 6)
+            itemCorner.CornerRadius = UDim.new(0, 8)
             itemCorner.Parent = item
 
             local checkbox = Instance.new("TextButton")
             checkbox.Size = UDim2.new(0, 24, 0, 24)
             checkbox.Position = UDim2.new(0, 8, 0.5, -12)
-            checkbox.BackgroundColor3 = Color3.fromRGB(55, 57, 65)
+            checkbox.BackgroundColor3 = Color3.fromRGB(55, 60, 70)
+            checkbox.BackgroundTransparency = 0.4
             checkbox.BorderSizePixel = 0
             checkbox.Text = ""
             checkbox.Parent = item
 
             local checkCorner = Instance.new("UICorner")
-            checkCorner.CornerRadius = UDim.new(0, 4)
+            checkCorner.CornerRadius = UDim.new(0, 6)
             checkCorner.Parent = checkbox
 
             local checkmark = Instance.new("TextLabel")
@@ -735,7 +794,7 @@ local function RefreshPlayerList()
             else
                 nameLabel.Text = displayName .. " (" .. plr.Name .. ")"
             end
-            nameLabel.TextColor3 = Color3.fromRGB(230, 230, 240)
+            nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
             nameLabel.TextSize = 14
             nameLabel.Font = Enum.Font.Gotham
             nameLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -752,13 +811,13 @@ local function RefreshPlayerList()
                 if SelectedTargets[plr.Name] then
                     SelectedTargets[plr.Name] = nil
                     checkmark.Visible = false
-                    TweenService:Create(item, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(42, 44, 52)}):Play()
+                    TweenService:Create(item, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(35, 40, 50), BackgroundTransparency = 0.6}):Play()
                 else
                     SelectedTargets[plr.Name] = plr
                     checkmark.Visible = true
-                    TweenService:Create(item, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(60, 80, 60)}):Play()
+                    TweenService:Create(item, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(60, 100, 60), BackgroundTransparency = 0.5}):Play()
                     task.wait(0.1)
-                    TweenService:Create(item, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(42, 44, 52)}):Play()
+                    TweenService:Create(item, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(35, 40, 50), BackgroundTransparency = 0.6}):Play()
                 end
                 UpdateStatus()
             end)
@@ -1038,5 +1097,7 @@ end)
 -- Initialize
 RefreshPlayerList()
 UpdateStatus()
-notify("Fling System", "Loaded! Click mode buttons to toggle anti-fling")
-print("[Fling System] Loaded successfully by milkaqyyy")
+
+local blurMsg = blurSupported and "✓" or "✗ (not supported on this device)"
+notify("Fling System", "Loaded! Blur: " .. blurMsg)
+print("[Fling System] Loaded successfully by milkaqyyy | Blur supported:", blurSupported)

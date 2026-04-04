@@ -761,4 +761,317 @@ local function RefreshPlayerList()
             checkmark.Parent = checkbox
 
             local nameLabel = Instance.new("TextLabel")
-            nameLabel.Size = U
+            nameLabel.Size = UDim2.new(1, -45, 1, 0)
+            nameLabel.Position = UDim2.new(0, 40, 0, 0)
+            nameLabel.BackgroundTransparency = 1
+            local displayName = plr.DisplayName
+            if displayName == plr.Name then
+                nameLabel.Text = displayName
+            else
+                nameLabel.Text = displayName .. " (" .. plr.Name .. ")"
+            end
+            nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            nameLabel.TextSize = 14
+            nameLabel.Font = Enum.Font.Gotham
+            nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+            nameLabel.TextTruncate = Enum.TextTruncate.AtEnd
+            nameLabel.Parent = item
+
+            local clickArea = Instance.new("TextButton")
+            clickArea.Size = UDim2.new(1, 0, 1, 0)
+            clickArea.BackgroundTransparency = 1
+            clickArea.Text = ""
+            clickArea.Parent = item
+
+            clickArea.MouseButton1Click:Connect(function()
+                if SelectedTargets[plr.Name] then
+                    SelectedTargets[plr.Name] = nil
+                    checkmark.Visible = false
+                    TweenService:Create(item, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(255, 255, 255), BackgroundTransparency = 0.8}):Play()
+                else
+                    SelectedTargets[plr.Name] = plr
+                    checkmark.Visible = true
+                    TweenService:Create(item, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(100, 180, 100), BackgroundTransparency = 0.6}):Play()
+                    task.wait(0.1)
+                    TweenService:Create(item, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(255, 255, 255), BackgroundTransparency = 0.8}):Play()
+                end
+                UpdateStatus()
+            end)
+
+            PlayerItems[plr.Name] = {
+                Frame = item,
+                Checkmark = checkmark
+            }
+
+            yOffset = yOffset + 44
+        end
+    end
+
+    PlayerScroll.CanvasSize = UDim2.new(0, 0, 0, yOffset + 10)
+end
+
+-- Select / Deselect all
+local function SelectAll(select)
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer then
+            if select then
+                SelectedTargets[plr.Name] = plr
+            else
+                SelectedTargets[plr.Name] = nil
+            end
+            local item = PlayerItems[plr.Name]
+            if item then
+                item.Checkmark.Visible = select
+            end
+        end
+    end
+    UpdateStatus()
+end
+
+-- ============ FLING MECHANISM ============
+getgenv().OldPos = nil
+getgenv().FPDH = workspace.FallenPartsDestroyHeight
+
+local function SkidFling(targetPlayer)
+    local character = LocalPlayer.Character
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+    local rootPart = humanoid and humanoid.RootPart
+    local targetChar = targetPlayer.Character
+    if not targetChar then return end
+
+    local tHumanoid = targetChar:FindFirstChildOfClass("Humanoid")
+    local tRootPart = tHumanoid and tHumanoid.RootPart
+    local tHead = targetChar:FindFirstChild("Head")
+    local accessory = targetChar:FindFirstChildOfClass("Accessory")
+    local handle = accessory and accessory:FindFirstChild("Handle")
+
+    if character and humanoid and rootPart then
+        if rootPart.Velocity.Magnitude < 50 then
+            getgenv().OldPos = rootPart.CFrame
+        end
+
+        if tHumanoid and tHumanoid.Sit then
+            return notify("Fling System", targetPlayer.DisplayName .. " is sitting")
+        end
+
+        local powerMult = FlingPower
+        local velocityMult = 9e7 * powerMult
+        local rotMult = 9e8 * powerMult
+        
+        if powerMult > 1.5 then
+            velocityMult = 9e7 * (powerMult * 1.5)
+            rotMult = 9e8 * (powerMult * 1.5)
+        end
+
+        pcall(function()
+            if tHead then
+                workspace.CurrentCamera.CameraSubject = tHead
+            elseif handle then
+                workspace.CurrentCamera.CameraSubject = handle
+            elseif tHumanoid and tRootPart then
+                workspace.CurrentCamera.CameraSubject = tHumanoid
+            end
+        end)
+
+        if not targetChar:FindFirstChildWhichIsA("BasePart") then
+            return
+        end
+
+        local function FPos(basePart, pos, ang)
+            rootPart.CFrame = CFrame.new(basePart.Position) * pos * ang
+            character:SetPrimaryPartCFrame(CFrame.new(basePart.Position) * pos * ang)
+            rootPart.Velocity = Vector3.new(velocityMult, velocityMult * 10, velocityMult)
+            rootPart.RotVelocity = Vector3.new(rotMult, rotMult, rotMult)
+            
+            if powerMult > 1.2 then
+                task.wait()
+                rootPart.Velocity = Vector3.new(velocityMult * 1.5, velocityMult * 12, velocityMult * 1.5)
+            end
+        end
+
+        local function SFBasePart(basePart)
+            local endTime = tick() + 2.5
+            local angle = 0
+            repeat
+                if rootPart and tHumanoid then
+                    if basePart.Velocity.Magnitude < 100 then
+                        angle = angle + 100
+                        FPos(basePart, CFrame.new(0, 1.5, 0) + tHumanoid.MoveDirection * basePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(angle), 0, 0))
+                        task.wait()
+                        FPos(basePart, CFrame.new(0, -1.5, 0) + tHumanoid.MoveDirection * basePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(angle), 0, 0))
+                        task.wait()
+                        FPos(basePart, CFrame.new(0, 1.5, 0) + tHumanoid.MoveDirection * basePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(angle), 0, 0))
+                        task.wait()
+                        FPos(basePart, CFrame.new(0, -1.5, 0) + tHumanoid.MoveDirection * basePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(angle), 0, 0))
+                        task.wait()
+                        FPos(basePart, CFrame.new(0, 1.5, 0) + tHumanoid.MoveDirection, CFrame.Angles(math.rad(angle), 0, 0))
+                        task.wait()
+                        FPos(basePart, CFrame.new(0, -1.5, 0) + tHumanoid.MoveDirection, CFrame.Angles(math.rad(angle), 0, 0))
+                        task.wait()
+                    else
+                        FPos(basePart, CFrame.new(0, 1.5, tHumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
+                        task.wait()
+                        FPos(basePart, CFrame.new(0, -1.5, -tHumanoid.WalkSpeed), CFrame.Angles(0, 0, 0))
+                        task.wait()
+                        FPos(basePart, CFrame.new(0, 1.5, tHumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
+                        task.wait()
+                        FPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(math.rad(90), 0, 0))
+                        task.wait()
+                        FPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
+                        task.wait()
+                        FPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(math.rad(90), 0, 0))
+                        task.wait()
+                        FPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
+                        task.wait()
+                    end
+                end
+            until tick() > endTime or not FlingActive
+        end
+
+        workspace.FallenPartsDestroyHeight = 0/0
+
+        local bv = Instance.new("BodyVelocity")
+        bv.Parent = rootPart
+        bv.Velocity = Vector3.new(0, 0, 0)
+        bv.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+
+        humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+
+        if tRootPart then
+            SFBasePart(tRootPart)
+        elseif tHead then
+            SFBasePart(tHead)
+        elseif handle then
+            SFBasePart(handle)
+        else
+            return notify("Fling System", targetPlayer.DisplayName .. " has no valid parts")
+        end
+
+        bv:Destroy()
+        humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+        
+        pcall(function()
+            workspace.CurrentCamera.CameraSubject = humanoid
+        end)
+
+        if getgenv().OldPos then
+            repeat
+                rootPart.CFrame = getgenv().OldPos * CFrame.new(0, 0.5, 0)
+                character:SetPrimaryPartCFrame(getgenv().OldPos * CFrame.new(0, 0.5, 0))
+                humanoid:ChangeState("GettingUp")
+                for _, part in pairs(character:GetChildren()) do
+                    if part:IsA("BasePart") then
+                        part.Velocity = Vector3.new()
+                        part.RotVelocity = Vector3.new()
+                    end
+                end
+                task.wait()
+            until (rootPart.Position - getgenv().OldPos.p).Magnitude < 25
+            workspace.FallenPartsDestroyHeight = getgenv().FPDH
+        end
+    else
+        return notify("Fling System", "Your character is not ready")
+    end
+end
+
+local function StartFlinging()
+    if FlingActive then return end
+
+    local targets = {}
+    for name, plr in pairs(SelectedTargets) do
+        if plr and plr.Parent then
+            table.insert(targets, plr)
+        end
+    end
+
+    if #targets == 0 then
+        StatusLabel.Text = "No targets selected!"
+        task.wait(1.5)
+        UpdateStatus()
+        return
+    end
+
+    FlingActive = true
+    UpdateStatus()
+    notify("Fling System", "Flinging " .. #targets .. " targets at " .. math.floor((FlingPower / 2.0) * 100) .. "% power")
+
+    task.spawn(function()
+        while FlingActive do
+            local validTargets = {}
+            for name, plr in pairs(SelectedTargets) do
+                if plr and plr.Parent and plr.Character then
+                    table.insert(validTargets, plr)
+                else
+                    SelectedTargets[name] = nil
+                    local item = PlayerItems[name]
+                    if item then
+                        item.Checkmark.Visible = false
+                    end
+                end
+            end
+
+            for _, plr in pairs(validTargets) do
+                if not FlingActive then break end
+                SkidFling(plr)
+                task.wait(0.08)
+            end
+            UpdateStatus()
+            task.wait(0.25)
+        end
+    end)
+end
+
+local function StopFlinging()
+    if not FlingActive then return end
+    FlingActive = false
+    UpdateStatus()
+    notify("Fling System", "Fling stopped")
+end
+
+-- Collapse functionality
+local function ToggleCollapse()
+    isCollapsed = not isCollapsed
+    
+    if isCollapsed then
+        MainFrame:TweenSize(UDim2.new(0, 420, 0, 50), "Out", "Quad", 0.3, true)
+        ContentContainer.Visible = false
+        CollapseButton.Text = "▲"
+    else
+        MainFrame:TweenSize(UDim2.new(0, 420, 0, originalHeight), "Out", "Quad", 0.3, true)
+        ContentContainer.Visible = true
+        CollapseButton.Text = "▼"
+    end
+end
+
+CollapseButton.MouseButton1Click:Connect(ToggleCollapse)
+
+-- Button connections
+StartButton.MouseButton1Click:Connect(StartFlinging)
+StopButton.MouseButton1Click:Connect(StopFlinging)
+SelectAllBtn.MouseButton1Click:Connect(function() SelectAll(true) end)
+DeselectAllBtn.MouseButton1Click:Connect(function() SelectAll(false) end)
+CloseButton.MouseButton1Click:Connect(function()
+    StopFlinging()
+    if antiFlingConnection1 then antiFlingConnection1:Disconnect() end
+    if LocalAntiFlingConnection then LocalAntiFlingConnection:Disconnect() end
+    for plr, data in pairs(AntiFlingDetection) do
+        if data.Connection then data.Connection:Disconnect() end
+    end
+    ScreenGui:Destroy()
+end)
+
+-- Player events
+Players.PlayerAdded:Connect(RefreshPlayerList)
+Players.PlayerRemoving:Connect(function(plr)
+    if SelectedTargets[plr.Name] then
+        SelectedTargets[plr.Name] = nil
+    end
+    RefreshPlayerList()
+    UpdateStatus()
+end)
+
+-- Initialize
+RefreshPlayerList()
+UpdateStatus()
+notify("Fling System", "Loaded! Glassmorphism UI + Anti-Fling")
+print("[Fling System] Loaded successfully by milkaqyyy")

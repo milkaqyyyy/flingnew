@@ -30,7 +30,7 @@ ScreenGui.Parent = game:GetService("CoreGui")
 
 -- Main window (темно-синяя тема)
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 420, 0, 900)
+MainFrame.Size = UDim2.new(0, 420, 0, 700)
 MainFrame.Position = UDim2.new(0.5, -210, 0.5, -335)
 MainFrame.BackgroundColor3 = Color3.fromRGB(28, 30, 36)
 MainFrame.BorderSizePixel = 0

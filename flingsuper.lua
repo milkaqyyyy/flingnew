@@ -32,13 +32,6 @@ BlurBackground.ScaleType = Enum.ScaleType.Slice
 BlurBackground.SliceCenter = Rect.new(0, 0, 0, 0)
 BlurBackground.Parent = ScreenGui
 
--- Дополнительное затемнение
-local DarkOverlay = Instance.new("Frame")
-DarkOverlay.Size = UDim2.new(1, 0, 1, 0)
-DarkOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-DarkOverlay.BackgroundTransparency = 0.5
-DarkOverlay.BorderSizePixel = 0
-DarkOverlay.Parent = ScreenGui
 
 -- ============ MAIN FRAME (GLASS) ============
 local MainFrame = Instance.new("Frame")

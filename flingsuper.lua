@@ -31,7 +31,7 @@ ScreenGui.Parent = game:GetService("CoreGui")
 -- Main window (темно-синяя тема)
 local MainFrame = Instance.new("Frame")
 MainFrame.Size = UDim2.new(0, 420, 0, 700)
-MainFrame.Position = UDim2.new(0.5, -210, 0.5, -335)
+MainFrame.Position = UDim2.new(0.5, -210, 0.5, -350)
 MainFrame.BackgroundColor3 = Color3.fromRGB(28, 30, 36)
 MainFrame.BorderSizePixel = 0
 MainFrame.ClipsDescendants = true
@@ -53,16 +53,12 @@ Shadow.BorderSizePixel = 0
 Shadow.ZIndex = -1
 Shadow.Parent = MainFrame
 
--- Title bar
+-- Title bar (без скругления)
 local TitleBar = Instance.new("Frame")
 TitleBar.Size = UDim2.new(1, 0, 0, 50)
 TitleBar.BackgroundColor3 = Color3.fromRGB(35, 37, 45)
 TitleBar.BorderSizePixel = 0
 TitleBar.Parent = MainFrame
-
-local TitleCorner = Instance.new("UICorner")
-TitleCorner.CornerRadius = UDim.new(0, 12)
-TitleCorner.Parent = TitleBar
 
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(1, -70, 1, 0)
@@ -268,7 +264,7 @@ AntiFlingStatus.Parent = ContentContainer
 -- Player list frame
 local ListFrame = Instance.new("Frame")
 ListFrame.Position = UDim2.new(0, 12, 0, 170)
-ListFrame.Size = UDim2.new(1, -24, 0, 370)
+ListFrame.Size = UDim2.new(1, -24, 0, 400)
 ListFrame.BackgroundColor3 = Color3.fromRGB(35, 37, 45)
 ListFrame.BorderSizePixel = 0
 ListFrame.Parent = ContentContainer
@@ -288,7 +284,7 @@ PlayerScroll.Parent = ListFrame
 
 -- Buttons
 local StartButton = Instance.new("TextButton")
-StartButton.Position = UDim2.new(0, 12, 0, 555)
+StartButton.Position = UDim2.new(0, 12, 0, 585)
 StartButton.Size = UDim2.new(0.48, -6, 0, 38)
 StartButton.BackgroundColor3 = Color3.fromRGB(40, 180, 70)
 StartButton.BorderSizePixel = 0
@@ -303,7 +299,7 @@ StartCorner.CornerRadius = UDim.new(0, 8)
 StartCorner.Parent = StartButton
 
 local StopButton = Instance.new("TextButton")
-StopButton.Position = UDim2.new(0.52, 0, 0, 555)
+StopButton.Position = UDim2.new(0.52, 0, 0, 585)
 StopButton.Size = UDim2.new(0.48, -6, 0, 38)
 StopButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
 StopButton.BorderSizePixel = 0
@@ -318,7 +314,7 @@ StopCorner.CornerRadius = UDim.new(0, 8)
 StopCorner.Parent = StopButton
 
 local SelectAllBtn = Instance.new("TextButton")
-SelectAllBtn.Position = UDim2.new(0, 12, 0, 600)
+SelectAllBtn.Position = UDim2.new(0, 12, 0, 630)
 SelectAllBtn.Size = UDim2.new(0.48, -6, 0, 32)
 SelectAllBtn.BackgroundColor3 = Color3.fromRGB(50, 52, 60)
 SelectAllBtn.BorderSizePixel = 0
@@ -333,7 +329,7 @@ SelectAllCorner.CornerRadius = UDim.new(0, 6)
 SelectAllCorner.Parent = SelectAllBtn
 
 local DeselectAllBtn = Instance.new("TextButton")
-DeselectAllBtn.Position = UDim2.new(0.52, 0, 0, 600)
+DeselectAllBtn.Position = UDim2.new(0.52, 0, 0, 630)
 DeselectAllBtn.Size = UDim2.new(0.48, -6, 0, 32)
 DeselectAllBtn.BackgroundColor3 = Color3.fromRGB(50, 52, 60)
 DeselectAllBtn.BorderSizePixel = 0
@@ -362,7 +358,7 @@ local FlingActive = false
 local FlingPower = 1.0
 local dragging = false
 local isCollapsed = false
-local originalHeight = 670
+local originalHeight = 700
 local CurrentAntiFlingMode = "MODE1"
 local antiFlingConnection1 = nil
 local antiFlingConnection2 = nil

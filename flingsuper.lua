@@ -1,5 +1,5 @@
--- SWILL FINAL EDITION - сдержанно, но сочно. Все текста кнопок БЕЛЫЕ.
--- Fling System v3 by milkaqyyy
+-- SWILL COMPLETE EDITION - полный рабочий скрипт
+-- Fling System v3 by milkaqyyy + Click Teleport Tool + Jerk + Tabs (Teleport/Graphics)
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -7,6 +7,7 @@ local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 local StarterGui = game:GetService("StarterGui")
+local mouse = LocalPlayer:GetMouse()
 
 pcall(function()
     for _, gui in pairs(game:GetService("CoreGui"):GetChildren()) do
@@ -23,8 +24,8 @@ ScreenGui.Parent = game:GetService("CoreGui")
 
 -- ============ ОСНОВНОЙ ФРЕЙМ ============
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 420, 0, 730)
-MainFrame.Position = UDim2.new(0.5, -210, 0.5, -380)
+MainFrame.Size = UDim2.new(0, 420, 0, 810)
+MainFrame.Position = UDim2.new(0.5, -210, 0.5, -385)
 MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 22)
 MainFrame.BackgroundTransparency = 0.15
 MainFrame.BorderSizePixel = 0
@@ -32,10 +33,6 @@ MainFrame.ClipsDescendants = true
 MainFrame.Active = true
 MainFrame.Draggable = true
 MainFrame.Parent = ScreenGui
-
-local Blur = Instance.new("BlurEffect")
-Blur.Size = 14
-Blur.Parent = MainFrame
 
 local Shadow = Instance.new("Frame")
 Shadow.Size = UDim2.new(1, 0, 1, 0)
@@ -72,7 +69,6 @@ local TitleCorner = Instance.new("UICorner")
 TitleCorner.CornerRadius = UDim.new(0, 18)
 TitleCorner.Parent = TitleBar
 
--- FLING SYSTEM - КРАСНЫЙ
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(1, -70, 1, 0)
 TitleLabel.Position = UDim2.new(0, 15, 0, 0)
@@ -84,7 +80,6 @@ TitleLabel.TextSize = 22
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 TitleLabel.Parent = TitleBar
 
--- Автор - ПЕПЕЛЬНЫЙ
 local AuthorLabel = Instance.new("TextLabel")
 AuthorLabel.Size = UDim2.new(1, -70, 0, 15)
 AuthorLabel.Position = UDim2.new(0, 16, 1, -18)
@@ -96,15 +91,14 @@ AuthorLabel.TextSize = 10
 AuthorLabel.TextXAlignment = Enum.TextXAlignment.Left
 AuthorLabel.Parent = TitleBar
 
--- Collapse Button - ТЕКСТ БЕЛЫЙ
 local CollapseButton = Instance.new("TextButton")
 CollapseButton.Position = UDim2.new(1, -65, 0, 12)
 CollapseButton.Size = UDim2.new(0, 26, 0, 26)
 CollapseButton.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
 CollapseButton.BackgroundTransparency = 0.2
 CollapseButton.BorderSizePixel = 0
-CollapseButton.Text = "▼"
-CollapseButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- БЕЛЫЙ
+CollapseButton.Text = "−"
+CollapseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 CollapseButton.Font = Enum.Font.GothamBold
 CollapseButton.TextSize = 18
 CollapseButton.Parent = TitleBar
@@ -113,7 +107,6 @@ local CollapseCorner = Instance.new("UICorner")
 CollapseCorner.CornerRadius = UDim.new(1, 0)
 CollapseCorner.Parent = CollapseButton
 
--- Close Button - ТЕКСТ БЕЛЫЙ
 local CloseButton = Instance.new("TextButton")
 CloseButton.Position = UDim2.new(1, -35, 0, 12)
 CloseButton.Size = UDim2.new(0, 26, 0, 26)
@@ -121,7 +114,7 @@ CloseButton.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
 CloseButton.BackgroundTransparency = 0.2
 CloseButton.BorderSizePixel = 0
 CloseButton.Text = "X"
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- БЕЛЫЙ
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseButton.Font = Enum.Font.GothamBold
 CloseButton.TextSize = 18
 CloseButton.Parent = TitleBar
@@ -130,31 +123,157 @@ local CloseCorner = Instance.new("UICorner")
 CloseCorner.CornerRadius = UDim.new(1, 0)
 CloseCorner.Parent = CloseButton
 
-local function AddDarkenHover(button, darkColor, normalColor, darkTrans, normalTrans)
-    normalColor = normalColor or button.BackgroundColor3
-    normalTrans = normalTrans or button.BackgroundTransparency
-    darkTrans = darkTrans or (normalTrans + 0.2)
+-- ============ ВКЛАДКИ (TABS) ============
+local TabBar = Instance.new("Frame")
+TabBar.Size = UDim2.new(1, -24, 0, 38)
+TabBar.Position = UDim2.new(0, 12, 0, 52)
+TabBar.BackgroundColor3 = Color3.fromRGB(25, 25, 28)
+TabBar.BackgroundTransparency = 0.2
+TabBar.BorderSizePixel = 0
+TabBar.Parent = MainFrame
+
+local TabBarCorner = Instance.new("UICorner")
+TabBarCorner.CornerRadius = UDim.new(0, 10)
+TabBarCorner.Parent = TabBar
+
+local Tab1Button = Instance.new("TextButton")
+Tab1Button.Size = UDim2.new(0.32, -4, 0, 30)
+Tab1Button.Position = UDim2.new(0, 4, 0.5, -15)
+Tab1Button.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
+Tab1Button.BackgroundTransparency = 0.3
+Tab1Button.BorderSizePixel = 0
+Tab1Button.Text = "🔥 FLING"
+Tab1Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Tab1Button.Font = Enum.Font.GothamBold
+Tab1Button.TextSize = 12
+Tab1Button.AutoButtonColor = false
+Tab1Button.Parent = TabBar
+
+local Tab1Corner = Instance.new("UICorner")
+Tab1Corner.CornerRadius = UDim.new(0, 6)
+Tab1Corner.Parent = Tab1Button
+
+local Tab2Button = Instance.new("TextButton")
+Tab2Button.Size = UDim2.new(0.32, -4, 0, 30)
+Tab2Button.Position = UDim2.new(0.34, 0, 0.5, -15)
+Tab2Button.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
+Tab2Button.BackgroundTransparency = 0.3
+Tab2Button.BorderSizePixel = 0
+Tab2Button.Text = "🚀 TELEPORT"
+Tab2Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Tab2Button.Font = Enum.Font.GothamBold
+Tab2Button.TextSize = 12
+Tab2Button.AutoButtonColor = false
+Tab2Button.Parent = TabBar
+
+local Tab2Corner = Instance.new("UICorner")
+Tab2Corner.CornerRadius = UDim.new(0, 6)
+Tab2Corner.Parent = Tab2Button
+
+local Tab3Button = Instance.new("TextButton")
+Tab3Button.Size = UDim2.new(0.32, -4, 0, 30)
+Tab3Button.Position = UDim2.new(0.68, 0, 0.5, -15)
+Tab3Button.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
+Tab3Button.BackgroundTransparency = 0.3
+Tab3Button.BorderSizePixel = 0
+Tab3Button.Text = "🎮 GRAPHICS"
+Tab3Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Tab3Button.Font = Enum.Font.GothamBold
+Tab3Button.TextSize = 12
+Tab3Button.AutoButtonColor = false
+Tab3Button.Parent = TabBar
+
+local Tab3Corner = Instance.new("UICorner")
+Tab3Corner.CornerRadius = UDim.new(0, 6)
+Tab3Corner.Parent = Tab3Button
+
+local function ApplySmoothHover(button)
+    local originalTrans = button.BackgroundTransparency
+    
     button.MouseEnter:Connect(function()
-        TweenService:Create(button, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            BackgroundColor3 = darkColor,
-            BackgroundTransparency = darkTrans
+        TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.45
         }):Play()
     end)
+    
     button.MouseLeave:Connect(function()
-        TweenService:Create(button, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            BackgroundColor3 = normalColor,
-            BackgroundTransparency = normalTrans
+        TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = originalTrans
         }):Play()
     end)
 end
 
+local function AddClickFlash(button)
+    button.MouseButton1Click:Connect(function()
+        local originalTrans = button.BackgroundTransparency
+        local flashFrame = Instance.new("Frame")
+        flashFrame.Size = UDim2.new(1, 0, 1, 0)
+        flashFrame.Position = UDim2.new(0, 0, 0, 0)
+        flashFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        flashFrame.BackgroundTransparency = 0.8
+        flashFrame.BorderSizePixel = 0
+        flashFrame.ZIndex = 10
+        flashFrame.Parent = button
+        
+        local buttonCorner = button:FindFirstChildWhichIsA("UICorner")
+        local flashCorner = Instance.new("UICorner")
+        if buttonCorner then
+            flashCorner.CornerRadius = buttonCorner.CornerRadius
+        end
+        flashCorner.Parent = flashFrame
+        
+        TweenService:Create(flashFrame, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 1
+        }):Play()
+        
+        task.wait(0.15)
+        flashFrame:Destroy()
+    end)
+end
+
+-- ============ КОНТЕЙНЕРЫ ДЛЯ ВКЛАДОК ============
 local ContentContainer = Instance.new("Frame")
-ContentContainer.Size = UDim2.new(1, 0, 1, -50)
-ContentContainer.Position = UDim2.new(0, 0, 0, 50)
+ContentContainer.Size = UDim2.new(1, 0, 1, -90)
+ContentContainer.Position = UDim2.new(0, 0, 0, 90)
 ContentContainer.BackgroundTransparency = 1
 ContentContainer.Parent = MainFrame
 
--- СТАТУС - ЭЛЕКТРИК СИНИЙ
+local FlingTab = Instance.new("Frame")
+FlingTab.Size = UDim2.new(1, 0, 1, 0)
+FlingTab.BackgroundTransparency = 1
+FlingTab.Visible = true
+FlingTab.Parent = ContentContainer
+
+local TeleportTab = Instance.new("Frame")
+TeleportTab.Size = UDim2.new(1, 0, 1, 0)
+TeleportTab.BackgroundTransparency = 1
+TeleportTab.Visible = false
+TeleportTab.Parent = ContentContainer
+
+local GraphicsTab = Instance.new("Frame")
+GraphicsTab.Size = UDim2.new(1, 0, 1, 0)
+GraphicsTab.BackgroundTransparency = 1
+GraphicsTab.Visible = false
+GraphicsTab.Parent = ContentContainer
+
+local function SwitchTab(tabName)
+    FlingTab.Visible = (tabName == "fling")
+    TeleportTab.Visible = (tabName == "teleport")
+    GraphicsTab.Visible = (tabName == "graphics")
+end
+
+Tab1Button.MouseButton1Click:Connect(function() SwitchTab("fling") end)
+Tab2Button.MouseButton1Click:Connect(function() SwitchTab("teleport") end)
+Tab3Button.MouseButton1Click:Connect(function() SwitchTab("graphics") end)
+
+ApplySmoothHover(Tab1Button)
+ApplySmoothHover(Tab2Button)
+ApplySmoothHover(Tab3Button)
+AddClickFlash(Tab1Button)
+AddClickFlash(Tab2Button)
+AddClickFlash(Tab3Button)
+
+-- ============ ПЕРЕНОСИМ ВЕСЬ КОНТЕНТ В FlingTab ============
 local StatusLabel = Instance.new("TextLabel")
 StatusLabel.Position = UDim2.new(0, 15, 0, 5)
 StatusLabel.Size = UDim2.new(1, -30, 0, 25)
@@ -164,9 +283,8 @@ StatusLabel.TextColor3 = Color3.fromRGB(80, 180, 255)
 StatusLabel.Font = Enum.Font.GothamBold
 StatusLabel.TextSize = 14
 StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
-StatusLabel.Parent = ContentContainer
+StatusLabel.Parent = FlingTab
 
--- POWER LABEL - ОГНЕННЫЙ
 local PowerLabel = Instance.new("TextLabel")
 PowerLabel.Position = UDim2.new(0, 15, 0, 38)
 PowerLabel.Size = UDim2.new(0, 80, 0, 25)
@@ -176,9 +294,8 @@ PowerLabel.TextColor3 = Color3.fromRGB(255, 100, 40)
 PowerLabel.Font = Enum.Font.GothamBold
 PowerLabel.TextSize = 12
 PowerLabel.TextXAlignment = Enum.TextXAlignment.Left
-PowerLabel.Parent = ContentContainer
+PowerLabel.Parent = FlingTab
 
--- POWER VALUE - ЯНТАРНЫЙ
 local PowerValue = Instance.new("TextLabel")
 PowerValue.Position = UDim2.new(1, -55, 0, 38)
 PowerValue.Size = UDim2.new(0, 45, 0, 25)
@@ -188,7 +305,7 @@ PowerValue.TextColor3 = Color3.fromRGB(255, 160, 60)
 PowerValue.Font = Enum.Font.GothamBold
 PowerValue.TextSize = 12
 PowerValue.TextXAlignment = Enum.TextXAlignment.Right
-PowerValue.Parent = ContentContainer
+PowerValue.Parent = FlingTab
 
 local PowerSlider = Instance.new("Frame")
 PowerSlider.Position = UDim2.new(0, 100, 0, 43)
@@ -196,7 +313,7 @@ PowerSlider.Size = UDim2.new(1, -165, 0, 15)
 PowerSlider.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
 PowerSlider.BackgroundTransparency = 0.3
 PowerSlider.BorderSizePixel = 0
-PowerSlider.Parent = ContentContainer
+PowerSlider.Parent = FlingTab
 
 local PowerSliderCorner = Instance.new("UICorner")
 PowerSliderCorner.CornerRadius = UDim.new(1, 0)
@@ -226,7 +343,20 @@ local PowerButtonCorner = Instance.new("UICorner")
 PowerButtonCorner.CornerRadius = UDim.new(1, 0)
 PowerButtonCorner.Parent = PowerButton
 
--- ANTI-FLING LABEL - ЗОЛОТОЙ
+PowerButton.MouseEnter:Connect(function()
+    TweenService:Create(PowerButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundColor3 = Color3.fromRGB(255, 100, 50),
+        BackgroundTransparency = 0
+    }):Play()
+end)
+
+PowerButton.MouseLeave:Connect(function()
+    TweenService:Create(PowerButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundColor3 = Color3.fromRGB(255, 140, 80),
+        BackgroundTransparency = 0.1
+    }):Play()
+end)
+
 local ModeLabel = Instance.new("TextLabel")
 ModeLabel.Position = UDim2.new(0, 15, 0, 72)
 ModeLabel.Size = UDim2.new(0, 100, 0, 20)
@@ -236,42 +366,40 @@ ModeLabel.TextColor3 = Color3.fromRGB(255, 200, 70)
 ModeLabel.Font = Enum.Font.GothamBold
 ModeLabel.TextSize = 12
 ModeLabel.TextXAlignment = Enum.TextXAlignment.Left
-ModeLabel.Parent = ContentContainer
+ModeLabel.Parent = FlingTab
 
--- MODE 1 / MODE 2 - текст БЕЛЫЙ (кнопки)
 local Mode1Button = Instance.new("TextButton")
 Mode1Button.Position = UDim2.new(0, 12, 0, 95)
-Mode1Button.Size = UDim2.new(0.48, -6, 0, 32)
+Mode1Button.Size = UDim2.new(0.46, -6, 0, 32)
 Mode1Button.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
 Mode1Button.BackgroundTransparency = 0.2
 Mode1Button.BorderSizePixel = 0
 Mode1Button.Text = "🛡️ MODE 1"
-Mode1Button.TextColor3 = Color3.fromRGB(255, 255, 255) -- БЕЛЫЙ
+Mode1Button.TextColor3 = Color3.fromRGB(255, 255, 255)
 Mode1Button.Font = Enum.Font.GothamBold
 Mode1Button.TextSize = 12
-Mode1Button.Parent = ContentContainer
+Mode1Button.Parent = FlingTab
 
 local Mode1Corner = Instance.new("UICorner")
 Mode1Corner.CornerRadius = UDim.new(0, 8)
 Mode1Corner.Parent = Mode1Button
 
 local Mode2Button = Instance.new("TextButton")
-Mode2Button.Position = UDim2.new(0.52, 0, 0, 95)
-Mode2Button.Size = UDim2.new(0.48, -6, 0, 32)
+Mode2Button.Position = UDim2.new(0.525, 0, 0, 95)
+Mode2Button.Size = UDim2.new(0.46, -6, 0, 32)
 Mode2Button.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
 Mode2Button.BackgroundTransparency = 0.2
 Mode2Button.BorderSizePixel = 0
 Mode2Button.Text = "🔰 MODE 2"
-Mode2Button.TextColor3 = Color3.fromRGB(255, 255, 255) -- БЕЛЫЙ
+Mode2Button.TextColor3 = Color3.fromRGB(255, 255, 255)
 Mode2Button.Font = Enum.Font.GothamBold
 Mode2Button.TextSize = 12
-Mode2Button.Parent = ContentContainer
+Mode2Button.Parent = FlingTab
 
 local Mode2Corner = Instance.new("UICorner")
 Mode2Corner.CornerRadius = UDim.new(0, 8)
 Mode2Corner.Parent = Mode2Button
 
--- AntiFlingStatus - НЕ ТРОГАЕМ
 local AntiFlingStatus = Instance.new("TextLabel")
 AntiFlingStatus.Position = UDim2.new(0, 15, 0, 132)
 AntiFlingStatus.Size = UDim2.new(0.5, -10, 0, 18)
@@ -281,16 +409,15 @@ AntiFlingStatus.TextColor3 = Color3.fromRGB(120, 220, 120)
 AntiFlingStatus.Font = Enum.Font.Gotham
 AntiFlingStatus.TextSize = 11
 AntiFlingStatus.TextXAlignment = Enum.TextXAlignment.Left
-AntiFlingStatus.Parent = ContentContainer
+AntiFlingStatus.Parent = FlingTab
 
--- СПИСОК ИГРОКОВ
 local ListFrame = Instance.new("Frame")
 ListFrame.Position = UDim2.new(0, 12, 0, 158)
 ListFrame.Size = UDim2.new(1, -24, 0, 370)
 ListFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 20)
 ListFrame.BackgroundTransparency = 0.3
 ListFrame.BorderSizePixel = 0
-ListFrame.Parent = ContentContainer
+ListFrame.Parent = FlingTab
 
 local ListCorner = Instance.new("UICorner")
 ListCorner.CornerRadius = UDim.new(0, 12)
@@ -311,75 +438,70 @@ PlayerScroll.ScrollBarThickness = 4
 PlayerScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
 PlayerScroll.Parent = ListFrame
 
--- START BUTTON - текст БЕЛЫЙ
 local StartButton = Instance.new("TextButton")
 StartButton.Position = UDim2.new(0, 12, 0, 540)
-StartButton.Size = UDim2.new(0.48, -6, 0, 38)
+StartButton.Size = UDim2.new(0.46, -6, 0, 38)
 StartButton.BackgroundColor3 = Color3.fromRGB(45, 75, 55)
 StartButton.BackgroundTransparency = 0.2
 StartButton.BorderSizePixel = 0
 StartButton.Text = "🔥 START FLING"
-StartButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- БЕЛЫЙ
+StartButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 StartButton.Font = Enum.Font.GothamBold
 StartButton.TextSize = 14
-StartButton.Parent = ContentContainer
+StartButton.Parent = FlingTab
 
 local StartCorner = Instance.new("UICorner")
 StartCorner.CornerRadius = UDim.new(0, 10)
 StartCorner.Parent = StartButton
 
--- STOP BUTTON - текст БЕЛЫЙ
 local StopButton = Instance.new("TextButton")
-StopButton.Position = UDim2.new(0.52, 0, 0, 540)
-StopButton.Size = UDim2.new(0.48, -6, 0, 38)
+StopButton.Position = UDim2.new(0.525, 0, 0, 540)
+StopButton.Size = UDim2.new(0.46, -6, 0, 38)
 StopButton.BackgroundColor3 = Color3.fromRGB(130, 55, 55)
 StopButton.BackgroundTransparency = 0.2
 StopButton.BorderSizePixel = 0
 StopButton.Text = "🛑 STOP FLING"
-StopButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- БЕЛЫЙ
+StopButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 StopButton.Font = Enum.Font.GothamBold
 StopButton.TextSize = 14
-StopButton.Parent = ContentContainer
+StopButton.Parent = FlingTab
 
 local StopCorner = Instance.new("UICorner")
 StopCorner.CornerRadius = UDim.new(0, 10)
 StopCorner.Parent = StopButton
 
--- SELECT ALL - текст БЕЛЫЙ
 local SelectAllBtn = Instance.new("TextButton")
 SelectAllBtn.Position = UDim2.new(0, 12, 0, 585)
-SelectAllBtn.Size = UDim2.new(0.48, -6, 0, 32)
+SelectAllBtn.Size = UDim2.new(0.46, -6, 0, 32)
 SelectAllBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
 SelectAllBtn.BackgroundTransparency = 0.3
 SelectAllBtn.BorderSizePixel = 0
 SelectAllBtn.Text = "✅ SELECT ALL"
-SelectAllBtn.TextColor3 = Color3.fromRGB(255, 255, 255) -- БЕЛЫЙ
+SelectAllBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 SelectAllBtn.Font = Enum.Font.GothamBold
 SelectAllBtn.TextSize = 12
-SelectAllBtn.Parent = ContentContainer
+SelectAllBtn.Parent = FlingTab
 
 local SelectAllCorner = Instance.new("UICorner")
 SelectAllCorner.CornerRadius = UDim.new(0, 8)
 SelectAllCorner.Parent = SelectAllBtn
 
--- DESELECT ALL - текст БЕЛЫЙ
 local DeselectAllBtn = Instance.new("TextButton")
-DeselectAllBtn.Position = UDim2.new(0.52, 0, 0, 585)
-DeselectAllBtn.Size = UDim2.new(0.48, -6, 0, 32)
+DeselectAllBtn.Position = UDim2.new(0.525, 0, 0, 585)
+DeselectAllBtn.Size = UDim2.new(0.46, -6, 0, 32)
 DeselectAllBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
 DeselectAllBtn.BackgroundTransparency = 0.3
 DeselectAllBtn.BorderSizePixel = 0
 DeselectAllBtn.Text = "❌ DESELECT ALL"
-DeselectAllBtn.TextColor3 = Color3.fromRGB(255, 255, 255) -- БЕЛЫЙ
+DeselectAllBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 DeselectAllBtn.Font = Enum.Font.GothamBold
 DeselectAllBtn.TextSize = 12
-DeselectAllBtn.Parent = ContentContainer
+DeselectAllBtn.Parent = FlingTab
 
 local DeselectCorner = Instance.new("UICorner")
 DeselectCorner.CornerRadius = UDim.new(0, 8)
 DeselectCorner.Parent = DeselectAllBtn
 
--- JERK BUTTON - текст БЕЛЫЙ
 local JerkButton = Instance.new("TextButton")
 JerkButton.Position = UDim2.new(0, 12, 0, 625)
 JerkButton.Size = UDim2.new(1, -24, 0, 40)
@@ -387,10 +509,10 @@ JerkButton.BackgroundColor3 = Color3.fromRGB(80, 60, 100)
 JerkButton.BackgroundTransparency = 0.2
 JerkButton.BorderSizePixel = 0
 JerkButton.Text = "💦 JERK MODE [OFF]"
-JerkButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- БЕЛЫЙ
+JerkButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 JerkButton.Font = Enum.Font.GothamBold
 JerkButton.TextSize = 14
-JerkButton.Parent = ContentContainer
+JerkButton.Parent = FlingTab
 
 local JerkCorner = Instance.new("UICorner")
 JerkCorner.CornerRadius = UDim.new(0, 10)
@@ -403,28 +525,194 @@ JerkStroke.Transparency = 0.4
 JerkStroke.Enabled = true
 JerkStroke.Parent = JerkButton
 
-AddDarkenHover(CollapseButton, Color3.fromRGB(25, 25, 30), Color3.fromRGB(40, 40, 45), 0.1, 0.2)
-AddDarkenHover(CloseButton, Color3.fromRGB(110, 35, 35), Color3.fromRGB(150, 50, 50), 0.1, 0.2)
-AddDarkenHover(StartButton, Color3.fromRGB(35, 60, 45), Color3.fromRGB(45, 75, 55), 0.1, 0.2)
-AddDarkenHover(StopButton, Color3.fromRGB(100, 40, 40), Color3.fromRGB(130, 55, 55), 0.1, 0.2)
-AddDarkenHover(SelectAllBtn, Color3.fromRGB(30, 30, 35), Color3.fromRGB(45, 45, 50), 0.2, 0.3)
-AddDarkenHover(DeselectAllBtn, Color3.fromRGB(30, 30, 35), Color3.fromRGB(45, 45, 50), 0.2, 0.3)
-AddDarkenHover(Mode1Button, Color3.fromRGB(40, 40, 50), Color3.fromRGB(55, 55, 65), 0.1, 0.2)
-AddDarkenHover(Mode2Button, Color3.fromRGB(40, 40, 50), Color3.fromRGB(55, 55, 65), 0.1, 0.2)
-AddDarkenHover(JerkButton, Color3.fromRGB(65, 50, 85), Color3.fromRGB(80, 60, 100), 0.1, 0.2)
+local TpButton = Instance.new("TextButton")
+TpButton.Position = UDim2.new(0, 12, 0, 670)
+TpButton.Size = UDim2.new(1, -24, 0, 40)
+TpButton.BackgroundColor3 = Color3.fromRGB(40, 55, 70)
+TpButton.BackgroundTransparency = 0.2
+TpButton.BorderSizePixel = 0
+TpButton.Text = "🔮 CLICK TP TOOL [OFF]"
+TpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TpButton.Font = Enum.Font.GothamBold
+TpButton.TextSize = 13
+TpButton.Parent = FlingTab
 
--- ============ ВСЯ ЛОГИКА (БЕЗ ИЗМЕНЕНИЙ) ============
+local TpCorner = Instance.new("UICorner")
+TpCorner.CornerRadius = UDim.new(0, 10)
+TpCorner.Parent = TpButton
+
+local tpOriginalColor = TpButton.BackgroundColor3
+local tpOriginalTrans = TpButton.BackgroundTransparency
+local tpOriginalSize = TpButton.Size
+
+TpButton.MouseEnter:Connect(function()
+    TweenService:Create(TpButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundColor3 = Color3.fromRGB(25, 40, 55),
+        BackgroundTransparency = 0.05,
+        Size = UDim2.new(tpOriginalSize.X.Scale, tpOriginalSize.X.Offset, tpOriginalSize.Y.Scale, tpOriginalSize.Y.Offset + 2)
+    }):Play()
+end)
+
+TpButton.MouseLeave:Connect(function()
+    TweenService:Create(TpButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundColor3 = tpOriginalColor,
+        BackgroundTransparency = tpOriginalTrans,
+        Size = tpOriginalSize
+    }):Play()
+end)
+
+local function ApplyButtonAnimation(button, hoverColor, hoverTrans)
+    local originalColor = button.BackgroundColor3
+    local originalTrans = button.BackgroundTransparency
+    local originalSize = button.Size
+    
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = hoverColor or originalColor,
+            BackgroundTransparency = hoverTrans or math.max(originalTrans - 0.15, 0.05),
+            Size = UDim2.new(originalSize.X.Scale, originalSize.X.Offset, originalSize.Y.Scale, originalSize.Y.Offset + 2)
+        }):Play()
+    end)
+    
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = originalColor,
+            BackgroundTransparency = originalTrans,
+            Size = originalSize
+        }):Play()
+    end)
+    
+    button.MouseButton1Click:Connect(function()
+        local flashFrame = Instance.new("Frame")
+        flashFrame.Size = UDim2.new(1, 0, 1, 0)
+        flashFrame.Position = UDim2.new(0, 0, 0, 0)
+        flashFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        flashFrame.BackgroundTransparency = 0.6
+        flashFrame.BorderSizePixel = 0
+        flashFrame.ZIndex = 10
+        flashFrame.Parent = button
+        
+        local buttonCorner = button:FindFirstChildWhichIsA("UICorner")
+        local flashCorner = Instance.new("UICorner")
+        if buttonCorner then
+            flashCorner.CornerRadius = buttonCorner.CornerRadius
+        else
+            flashCorner.CornerRadius = UDim.new(0, 8)
+        end
+        flashCorner.Parent = flashFrame
+        
+        TweenService:Create(flashFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 1
+        }):Play()
+        
+        task.wait(0.4)
+        flashFrame:Destroy()
+    end)
+end
+
+ApplyButtonAnimation(CollapseButton, Color3.fromRGB(25, 25, 30), 0.1)
+ApplyButtonAnimation(CloseButton, Color3.fromRGB(110, 35, 35), 0.1)
+ApplyButtonAnimation(StartButton, Color3.fromRGB(35, 60, 45), 0.1)
+ApplyButtonAnimation(StopButton, Color3.fromRGB(100, 40, 40), 0.1)
+ApplyButtonAnimation(SelectAllBtn, Color3.fromRGB(30, 30, 35), 0.2)
+ApplyButtonAnimation(DeselectAllBtn, Color3.fromRGB(30, 30, 35), 0.2)
+ApplyButtonAnimation(Mode1Button, Color3.fromRGB(40, 40, 50), 0.1)
+ApplyButtonAnimation(Mode2Button, Color3.fromRGB(40, 40, 50), 0.1)
+ApplyButtonAnimation(JerkButton, Color3.fromRGB(65, 50, 85), 0.1)
+
+-- ============ АНИМАЦИЯ СВОРАЧИВАНИЯ (ПЛАВНАЯ КАК В GRAPHICS) ============
+local isCollapsed = false
+local originalHeight = 810
+
+CollapseButton.MouseButton1Click:Connect(function()
+    isCollapsed = not isCollapsed
+    if isCollapsed then
+        TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0, 420, 0, 50)
+        }):Play()
+        CollapseButton.Text = "+"
+    else
+        TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0, 420, 0, originalHeight)
+        }):Play()
+        CollapseButton.Text = "−"
+    end
+end)
+
+-- ============ ЛОГИКА ============
 local SelectedTargets = {}
 local PlayerItems = {}
 local FlingActive = false
 local FlingPower = 1.0
 local dragging = false
-local isCollapsed = false
-local originalHeight = 730
 local CurrentAntiFlingMode = "MODE1"
 local antiFlingConnection1 = nil
 local JerkActive = false
 local CurrentJerkThread = nil
+
+local tpTool = nil
+local tpActive = false
+
+local function GiveTpTool()
+    if tpActive then return end
+    tpTool = Instance.new("Tool")
+    tpTool.RequiresHandle = false
+    tpTool.Name = "Click Teleport"
+    tpTool.Activated:Connect(function()
+        local pos = mouse.Hit + Vector3.new(0, 2.5, 0)
+        pos = CFrame.new(pos.X, pos.Y, pos.Z)
+        local char = LocalPlayer.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            char.HumanoidRootPart.CFrame = pos
+        end
+    end)
+    tpTool.Parent = LocalPlayer.Backpack
+    tpActive = true
+    TpButton.Text = "🔮 CLICK TP TOOL [ON]"
+    TweenService:Create(TpButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundColor3 = Color3.fromRGB(60, 85, 100)
+    }):Play()
+    notify("TP Tool", "Click Teleport Tool GIVEN")
+end
+
+local function RemoveTpTool()
+    if not tpActive then return end
+    if tpTool then
+        tpTool:Destroy()
+        tpTool = nil
+    end
+    local backpack = LocalPlayer.Backpack
+    for _, item in pairs(backpack:GetChildren()) do
+        if item.Name == "Click Teleport" then
+            item:Destroy()
+        end
+    end
+    local char = LocalPlayer.Character
+    if char then
+        for _, item in pairs(char:GetChildren()) do
+            if item:IsA("Tool") and item.Name == "Click Teleport" then
+                item:Destroy()
+            end
+        end
+    end
+    tpActive = false
+    TpButton.Text = "🔮 CLICK TP TOOL [OFF]"
+    TweenService:Create(TpButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundColor3 = Color3.fromRGB(40, 55, 70),
+        BackgroundTransparency = 0.2
+    }):Play()
+    notify("TP Tool", "Click Teleport Tool REMOVED")
+end
+
+local function ToggleTpTool()
+    if tpActive then
+        RemoveTpTool()
+    else
+        GiveTpTool()
+    end
+end
+
+TpButton.MouseButton1Click:Connect(ToggleTpTool)
 
 local function notify(title, text)
     pcall(function()
@@ -432,7 +720,6 @@ local function notify(title, text)
     end)
 end
 
--- JERK
 local function StopJerk()
     if CurrentJerkThread then
         task.cancel(CurrentJerkThread)
@@ -440,8 +727,27 @@ local function StopJerk()
     end
     JerkActive = false
     JerkButton.Text = "💦 JERK MODE [OFF]"
-    JerkButton.BackgroundColor3 = Color3.fromRGB(80, 60, 100)
+    TweenService:Create(JerkButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundColor3 = Color3.fromRGB(80, 60, 100)
+    }):Play()
     if JerkStroke then JerkStroke.Enabled = true end
+    
+    pcall(function()
+        local backpack = LocalPlayer.Backpack
+        for _, item in pairs(backpack:GetChildren()) do
+            if item.Name and (item.Name:lower():find("jerk") or item.Name:lower():find("dildo") or item.Name:lower():find("sex")) then
+                item:Destroy()
+            end
+        end
+        local char = LocalPlayer.Character
+        if char then
+            for _, item in pairs(char:GetChildren()) do
+                if item:IsA("Tool") and item.Name and (item.Name:lower():find("jerk") or item.Name:lower():find("dildo") or item.Name:lower():find("sex")) then
+                    item:Destroy()
+                end
+            end
+        end
+    end)
 end
 
 local function StartJerk()
@@ -457,7 +763,9 @@ local function StartJerk()
         end)
         JerkActive = true
         JerkButton.Text = "💦 JERK MODE [ON]"
-        JerkButton.BackgroundColor3 = Color3.fromRGB(70, 120, 70)
+        TweenService:Create(JerkButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = Color3.fromRGB(70, 120, 70)
+        }):Play()
         if JerkStroke then JerkStroke.Enabled = false end
         notify("Jerk", "Jerk mode ACTIVATED 💦")
     end)
@@ -469,21 +777,27 @@ local function StartJerk()
 end
 
 local function ToggleJerk()
-    if JerkActive then StopJerk(); notify("Jerk", "Jerk mode DISABLED")
-    else StartJerk() end
+    if JerkActive then 
+        StopJerk()
+        notify("Jerk", "Jerk mode DISABLED")
+    else 
+        StartJerk()
+    end
 end
 JerkButton.MouseButton1Click:Connect(ToggleJerk)
 
--- POWER SLIDER
 local function UpdatePower(value)
     FlingPower = math.clamp(value, 0.1, 2.0)
     local percent = math.floor((FlingPower / 2.0) * 100)
     PowerValue.Text = percent .. "%"
-    PowerFill.Size = UDim2.new(FlingPower / 2.0, 0, 1, 0)
+    TweenService:Create(PowerFill, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Size = UDim2.new(FlingPower / 2.0, 0, 1, 0)
+    }):Play()
     pcall(function()
         PowerButton.Position = UDim2.new((FlingPower / 2.0) - (20 / PowerSlider.AbsoluteSize.X), 0, 0, 0)
     end)
 end
+
 PowerButton.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = true end
 end)
@@ -500,7 +814,6 @@ UserInputService.InputChanged:Connect(function(input)
 end)
 UpdatePower(1.0)
 
--- ANTI-FLING MODE 1
 local MAX_VELOCITY = 60
 local MAX_ANGULAR_VEL = 30
 local function StartAntiFlingMode1()
@@ -529,7 +842,6 @@ local function StartAntiFlingMode1()
     end)
 end
 
--- ANTI-FLING MODE 2
 local AntiFlingDetection = {}
 local LocalLastPosition = nil
 local LocalAntiFlingConnection = nil
@@ -604,8 +916,10 @@ local function ToggleMode1()
     if CurrentAntiFlingMode == "MODE1" then
         if antiFlingConnection1 then antiFlingConnection1:Disconnect() end
         CurrentAntiFlingMode = "OFF"
-        Mode1Button.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
-        Mode1Button.BackgroundTransparency = 0.2
+        TweenService:Create(Mode1Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = Color3.fromRGB(55, 55, 65),
+            BackgroundTransparency = 0.2
+        }):Play()
         AntiFlingStatus.Text = "Anti-Fling: Disabled"
         AntiFlingStatus.TextColor3 = Color3.fromRGB(230, 120, 120)
         notify("Anti-Fling", "Mode 1 DISABLED")
@@ -614,44 +928,56 @@ local function ToggleMode1()
             if LocalAntiFlingConnection then LocalAntiFlingConnection:Disconnect() end
             for plr, data in pairs(AntiFlingDetection) do if data.Connection then data.Connection:Disconnect() end end
             AntiFlingDetection = {}
-            Mode2Button.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
-            Mode2Button.BackgroundTransparency = 0.2
+            TweenService:Create(Mode2Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                BackgroundColor3 = Color3.fromRGB(55, 55, 65),
+                BackgroundTransparency = 0.2
+            }):Play()
         end
         CurrentAntiFlingMode = "MODE1"
         StartAntiFlingMode1()
-        Mode1Button.BackgroundColor3 = Color3.fromRGB(85, 85, 105)
-        Mode1Button.BackgroundTransparency = 0.1
+        TweenService:Create(Mode1Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = Color3.fromRGB(85, 85, 105),
+            BackgroundTransparency = 0.1
+        }):Play()
         AntiFlingStatus.Text = "Mode 1: Active (Velocity Block)"
         AntiFlingStatus.TextColor3 = Color3.fromRGB(120, 220, 120)
         notify("Anti-Fling", "Mode 1 ENABLED")
     end
 end
+
 local function ToggleMode2()
     if CurrentAntiFlingMode == "MODE2" then
         if LocalAntiFlingConnection then LocalAntiFlingConnection:Disconnect() end
         for plr, data in pairs(AntiFlingDetection) do if data.Connection then data.Connection:Disconnect() end end
         AntiFlingDetection = {}
         CurrentAntiFlingMode = "OFF"
-        Mode2Button.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
-        Mode2Button.BackgroundTransparency = 0.2
+        TweenService:Create(Mode2Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = Color3.fromRGB(55, 55, 65),
+            BackgroundTransparency = 0.2
+        }):Play()
         AntiFlingStatus.Text = "Anti-Fling: Disabled"
         AntiFlingStatus.TextColor3 = Color3.fromRGB(230, 120, 120)
         notify("Anti-Fling", "Mode 2 DISABLED")
     else
         if CurrentAntiFlingMode == "MODE1" then
             if antiFlingConnection1 then antiFlingConnection1:Disconnect() end
-            Mode1Button.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
-            Mode1Button.BackgroundTransparency = 0.2
+            TweenService:Create(Mode1Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                BackgroundColor3 = Color3.fromRGB(55, 55, 65),
+                BackgroundTransparency = 0.2
+            }):Play()
         end
         CurrentAntiFlingMode = "MODE2"
         StartAntiFlingMode2()
-        Mode2Button.BackgroundColor3 = Color3.fromRGB(85, 85, 105)
-        Mode2Button.BackgroundTransparency = 0.1
+        TweenService:Create(Mode2Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = Color3.fromRGB(85, 85, 105),
+            BackgroundTransparency = 0.1
+        }):Play()
         AntiFlingStatus.Text = "Mode 2: Active (Advanced Detection)"
         AntiFlingStatus.TextColor3 = Color3.fromRGB(120, 220, 120)
         notify("Anti-Fling", "Mode 2 ENABLED")
     end
 end
+
 Mode1Button.MouseButton1Click:Connect(ToggleMode1)
 Mode2Button.MouseButton1Click:Connect(ToggleMode2)
 ToggleMode1()
@@ -660,10 +986,8 @@ local function UpdateStatus()
     local count = 0 for _ in pairs(SelectedTargets) do count = count + 1 end
     if FlingActive then
         StatusLabel.Text = "🔥 FLING ACTIVE | Targets: " .. count .. " | Power: " .. math.floor((FlingPower / 2.0) * 100) .. "%"
-        StatusLabel.TextColor3 = Color3.fromRGB(80, 180, 255)
     else
         StatusLabel.Text = "📋 Selected targets: " .. count
-        StatusLabel.TextColor3 = Color3.fromRGB(80, 180, 255)
     end
 end
 
@@ -684,9 +1008,11 @@ local function RefreshPlayerList()
             item.BackgroundTransparency = 0.3
             item.BorderSizePixel = 0
             item.Parent = PlayerScroll
+            
             local itemCorner = Instance.new("UICorner")
             itemCorner.CornerRadius = UDim.new(0, 8)
             itemCorner.Parent = item
+            
             local checkbox = Instance.new("TextButton")
             checkbox.Size = UDim2.new(0, 24, 0, 24)
             checkbox.Position = UDim2.new(0, 8, 0.5, -12)
@@ -695,10 +1021,11 @@ local function RefreshPlayerList()
             checkbox.BorderSizePixel = 0
             checkbox.Text = ""
             checkbox.Parent = item
+            
             local checkCorner = Instance.new("UICorner")
             checkCorner.CornerRadius = UDim.new(0, 6)
             checkCorner.Parent = checkbox
-            AddDarkenHover(checkbox, Color3.fromRGB(40, 40, 50), Color3.fromRGB(55, 55, 65), 0.1, 0.2)
+            
             local checkmark = Instance.new("TextLabel")
             checkmark.Size = UDim2.new(1, 0, 1, 0)
             checkmark.BackgroundTransparency = 1
@@ -708,37 +1035,50 @@ local function RefreshPlayerList()
             checkmark.Font = Enum.Font.GothamBold
             checkmark.Visible = (SelectedTargets[plr.Name] ~= nil)
             checkmark.Parent = checkbox
+            
             local nameLabel = Instance.new("TextLabel")
             nameLabel.Size = UDim2.new(1, -45, 1, 0)
             nameLabel.Position = UDim2.new(0, 40, 0, 0)
             nameLabel.BackgroundTransparency = 1
             local displayName = plr.DisplayName
             if displayName == plr.Name then nameLabel.Text = displayName else nameLabel.Text = displayName .. " (" .. plr.Name .. ")" end
-            nameLabel.TextColor3 = Color3.fromRGB(220, 220, 245) -- светло-серебряный
+            nameLabel.TextColor3 = Color3.fromRGB(220, 220, 245)
             nameLabel.TextSize = 14
             nameLabel.Font = Enum.Font.Gotham
             nameLabel.TextXAlignment = Enum.TextXAlignment.Left
             nameLabel.TextTruncate = Enum.TextTruncate.AtEnd
             nameLabel.Parent = item
+            
             local clickArea = Instance.new("TextButton")
             clickArea.Size = UDim2.new(1, 0, 1, 0)
             clickArea.BackgroundTransparency = 1
             clickArea.Text = ""
             clickArea.Parent = item
+            
             clickArea.MouseButton1Click:Connect(function()
                 if SelectedTargets[plr.Name] then
                     SelectedTargets[plr.Name] = nil
                     checkmark.Visible = false
-                    TweenService:Create(item, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(30, 30, 35), BackgroundTransparency = 0.3}):Play()
+                    TweenService:Create(item, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(30, 30, 35),
+                        BackgroundTransparency = 0.3
+                    }):Play()
                 else
                     SelectedTargets[plr.Name] = plr
                     checkmark.Visible = true
-                    TweenService:Create(item, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(55, 55, 75), BackgroundTransparency = 0.2}):Play()
+                    TweenService:Create(item, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(55, 55, 75),
+                        BackgroundTransparency = 0.2
+                    }):Play()
                     task.wait(0.1)
-                    TweenService:Create(item, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(30, 30, 35), BackgroundTransparency = 0.3}):Play()
+                    TweenService:Create(item, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(30, 30, 35),
+                        BackgroundTransparency = 0.3
+                    }):Play()
                 end
                 UpdateStatus()
             end)
+            
             PlayerItems[plr.Name] = {Frame = item, Checkmark = checkmark}
             yOffset = yOffset + 44
         end
@@ -757,9 +1097,9 @@ local function SelectAll(select)
     UpdateStatus()
 end
 
--- FLING MECHANISM
 getgenv().OldPos = nil
 getgenv().FPDH = workspace.FallenPartsDestroyHeight
+
 local function SkidFling(targetPlayer)
     local character = LocalPlayer.Character
     local humanoid = character and character:FindFirstChildOfClass("Humanoid")
@@ -846,10 +1186,22 @@ local function StartFlinging()
     if FlingActive then return end
     local targets = {}
     for name, plr in pairs(SelectedTargets) do if plr and plr.Parent then table.insert(targets, plr) end end
-    if #targets == 0 then StatusLabel.Text = "No targets selected!"; task.wait(1.5); UpdateStatus(); return end
+    if #targets == 0 then
+        StatusLabel.Text = "No targets selected!"
+        TweenService:Create(StatusLabel, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            TextColor3 = Color3.fromRGB(255, 100, 100)
+        }):Play()
+        task.wait(1.5)
+        TweenService:Create(StatusLabel, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            TextColor3 = Color3.fromRGB(80, 180, 255)
+        }):Play()
+        UpdateStatus()
+        return
+    end
     FlingActive = true
     UpdateStatus()
     notify("Fling System", "Flinging " .. #targets .. " targets at " .. math.floor((FlingPower / 2.0) * 100) .. "% power")
+    
     task.spawn(function()
         while FlingActive do
             local validTargets = {}
@@ -871,27 +1223,525 @@ local function StopFlinging()
     notify("Fling System", "Fling stopped")
 end
 
-local function ToggleCollapse()
-    isCollapsed = not isCollapsed
-    if isCollapsed then
-        MainFrame:TweenSize(UDim2.new(0, 420, 0, 50), "Out", "Quad", 0.3, true)
-        ContentContainer.Visible = false
-        CollapseButton.Text = "▲"
-    else
-        MainFrame:TweenSize(UDim2.new(0, 420, 0, originalHeight), "Out", "Quad", 0.3, true)
-        ContentContainer.Visible = true
-        CollapseButton.Text = "▼"
-    end
-end
-
-CollapseButton.MouseButton1Click:Connect(ToggleCollapse)
 StartButton.MouseButton1Click:Connect(StartFlinging)
 StopButton.MouseButton1Click:Connect(StopFlinging)
 SelectAllBtn.MouseButton1Click:Connect(function() SelectAll(true) end)
 DeselectAllBtn.MouseButton1Click:Connect(function() SelectAll(false) end)
+
+-- ============ FPS БУСТЕР (RIP#6666) ============
+local FPSBoosterScript = [[
+if not _G.Ignore then _G.Ignore = {} end
+_G.SendNotifications = false
+_G.ConsoleLogs = false
+
+_G.Settings = {
+    Players = {["Ignore Me"] = true, ["Ignore Others"] = true},
+    Meshes = {Destroy = false, LowDetail = true},
+    Images = {Invisible = true, LowDetail = false, Destroy = false},
+    ["No Particles"] = true,
+    ["No Camera Effects"] = true,
+    ["No Explosions"] = true,
+    ["No Clothes"] = true,
+    ["Low Water Graphics"] = true,
+    ["No Shadows"] = true,
+    ["Low Rendering"] = true,
+    ["Low Quality Parts"] = true,
+    Other = {
+        ["FPS Cap"] = true,
+        ["No Camera Effects"] = true,
+        ["No Clothes"] = true,
+        ["Low Water Graphics"] = true,
+        ["No Shadows"] = true,
+        ["Low Rendering"] = true,
+        ["Low Quality Parts"] = true,
+        ["Low Quality Models"] = true,
+        ["Reset Materials"] = true,
+        ["Lower Quality MeshParts"] = true,
+        ClearNilInstances = false
+    }
+}
+
+if not game:IsLoaded() then repeat task.wait() until game:IsLoaded() end
+
+local Players, Lighting, StarterGui, MaterialService = game:GetService("Players"), game:GetService("Lighting"), game:GetService("StarterGui"), game:GetService("MaterialService")
+local ME, CanBeEnabled = Players.LocalPlayer, {"ParticleEmitter", "Trail", "Smoke", "Fire", "Sparkles"}
+
+local function PartOfCharacter(Inst)
+    for i, v in pairs(Players:GetPlayers()) do
+        if v ~= ME and v.Character and Inst:IsDescendantOf(v.Character) then return true end
+    end
+    return false
+end
+
+local function DescendantOfIgnore(Inst)
+    for i, v in pairs(_G.Ignore) do
+        if Inst:IsDescendantOf(v) then return true end
+    end
+    return false
+end
+
+local function CheckIfBad(Inst)
+    if not Inst:IsDescendantOf(Players) and (_G.Settings.Players["Ignore Others"] and not PartOfCharacter(Inst) 
+    or not _G.Settings.Players["Ignore Others"]) and (_G.Settings.Players["Ignore Me"] and ME.Character and not Inst:IsDescendantOf(ME.Character) 
+    or not _G.Settings.Players["Ignore Me"]) and (_G.Ignore and not table.find(_G.Ignore, Inst) and not DescendantOfIgnore(Inst) 
+    or (not _G.Ignore or type(_G.Ignore) ~= "table" or #_G.Ignore <= 0)) then
+        if Inst:IsA("DataModelMesh") then
+            if Inst:IsA("SpecialMesh") then
+                if _G.Settings.Meshes.NoMesh then Inst.MeshId = "" end
+                if _G.Settings.Meshes.NoTexture then Inst.TextureId = "" end
+            end
+            if _G.Settings.Meshes.Destroy or _G.Settings["No Meshes"] then Inst:Destroy() end
+        elseif Inst:IsA("FaceInstance") then
+            if _G.Settings.Images.Invisible then Inst.Transparency = 1; Inst.Shiny = 1 end
+            if _G.Settings.Images.LowDetail then Inst.Shiny = 1 end
+            if _G.Settings.Images.Destroy then Inst:Destroy() end
+        elseif table.find(CanBeEnabled, Inst.ClassName) then
+            if _G.Settings["Invisible Particles"] or _G.Settings["No Particles"] then Inst.Enabled = false end
+            if _G.Settings.Other["No Particles"] or _G.Settings["No Particles"] then Inst:Destroy() end
+        elseif Inst:IsA("PostEffect") and (_G.Settings["No Camera Effects"] or _G.Settings.Other["No Camera Effects"]) then Inst.Enabled = false
+        elseif Inst:IsA("Explosion") then
+            if _G.Settings["No Explosions"] or _G.Settings.Other["No Explosions"] then Inst:Destroy() end
+        elseif Inst:IsA("Clothing") or Inst:IsA("SurfaceAppearance") or Inst:IsA("BaseWrap") then
+            if _G.Settings["No Clothes"] or _G.Settings.Other["No Clothes"] then Inst:Destroy() end
+        elseif Inst:IsA("BasePart") and not Inst:IsA("MeshPart") then
+            if _G.Settings["Low Quality Parts"] or _G.Settings.Other["Low Quality Parts"] then
+                Inst.Material = Enum.Material.Plastic
+                Inst.Reflectance = 0
+            end
+        elseif Inst:IsA("MeshPart") then
+            if _G.Settings.Other["Lower Quality MeshParts"] or _G.Settings.Meshes.LowDetail then
+                Inst.RenderFidelity = 2
+                Inst.Reflectance = 0
+                Inst.Material = Enum.Material.Plastic
+            end
+            if _G.Settings.Meshes.Destroy then Inst:Destroy() end
+        elseif Inst:IsA("Model") then
+            if _G.Settings.Other["Low Quality Models"] then Inst.LevelOfDetail = 1 end
+        end
+    end
+end
+
+pcall(function()
+    if _G.Settings["Low Water Graphics"] or _G.Settings.Other["Low Water Graphics"] then
+        local terrain = workspace:FindFirstChildOfClass("Terrain")
+        if terrain then
+            terrain.WaterWaveSize = 0
+            terrain.WaterWaveSpeed = 0
+            terrain.WaterReflectance = 0
+            terrain.WaterTransparency = 0
+            if sethiddenproperty then sethiddenproperty(terrain, "Decoration", false) end
+        end
+    end
+end)
+
+pcall(function()
+    if _G.Settings["No Shadows"] or _G.Settings.Other["No Shadows"] then
+        Lighting.GlobalShadows = false
+        Lighting.FogEnd = 9e9
+        Lighting.ShadowSoftness = 0
+        if sethiddenproperty then sethiddenproperty(Lighting, "Technology", 2) end
+    end
+end)
+
+pcall(function()
+    if _G.Settings["Low Rendering"] or _G.Settings.Other["Low Rendering"] then
+        settings().Rendering.QualityLevel = 1
+        settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level04
+    end
+end)
+
+pcall(function()
+    if _G.Settings.Other["Reset Materials"] then
+        for i, v in pairs(MaterialService:GetChildren()) do v:Destroy() end
+        MaterialService.Use2022Materials = false
+    end
+end)
+
+pcall(function()
+    if _G.Settings.Other["FPS Cap"] then
+        if setfpscap then setfpscap(1e6) end
+    end
+end)
+
+local Descendants = game:GetDescendants()
+for i, v in pairs(Descendants) do CheckIfBad(v) end
+
+game.DescendantAdded:Connect(function(value)
+    task.wait(0.5)
+    CheckIfBad(value)
+end)
+]]
+
+-- Создаём кнопку FPS бустера
+local FPSButton = Instance.new("TextButton")
+FPSButton.Size = UDim2.new(0.9, 0, 0, 32)
+FPSButton.Position = UDim2.new(0.05, 0, 0.03, 0)
+FPSButton.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
+FPSButton.BackgroundTransparency = 0.2
+FPSButton.BorderSizePixel = 0
+FPSButton.Text = "⚡ FPS БУСТ [ВЫКЛ]"
+FPSButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+FPSButton.Font = Enum.Font.GothamBold
+FPSButton.TextSize = 13
+FPSButton.Parent = GraphicsTab
+
+local FPSButtonCorner = Instance.new("UICorner")
+FPSButtonCorner.CornerRadius = UDim.new(0, 6)
+FPSButtonCorner.Parent = FPSButton
+
+local BoostActive = false
+local BoosterCoroutine = nil
+
+local function ToggleFPSBooster()
+    BoostActive = not BoostActive
+    
+    if BoostActive then
+        if BoosterCoroutine then task.cancel(BoosterCoroutine) end
+        BoosterCoroutine = task.spawn(function()
+            local success, err = pcall(function()
+                loadstring(FPSBoosterScript)()
+            end)
+            if not success then
+                BoostActive = false
+                FPSButton.Text = "⚡ FPS БУСТ [ВЫКЛ]"
+            end
+        end)
+        FPSButton.Text = "✅ FPS БУСТ [ВКЛ]"
+        TweenService:Create(FPSButton, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(70, 120, 70),
+            BackgroundTransparency = 0.1
+        }):Play()
+        notify("FPS Бустер", "Оптимизация включена")
+    else
+        if BoosterCoroutine then task.cancel(BoosterCoroutine); BoosterCoroutine = nil end
+        FPSButton.Text = "⚡ FPS БУСТ [ВЫКЛ]"
+        TweenService:Create(FPSButton, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(55, 55, 65),
+            BackgroundTransparency = 0.2
+        }):Play()
+        notify("FPS Бустер", "Оптимизация выключена")
+    end
+end
+
+FPSButton.MouseEnter:Connect(function()
+    TweenService:Create(FPSButton, TweenInfo.new(0.2), {
+        BackgroundTransparency = 0.05,
+        Size = UDim2.new(0.92, 0, 0, 34)
+    }):Play()
+end)
+
+FPSButton.MouseLeave:Connect(function()
+    TweenService:Create(FPSButton, TweenInfo.new(0.2), {
+        BackgroundTransparency = 0.2,
+        Size = UDim2.new(0.9, 0, 0, 32)
+    }):Play()
+end)
+
+FPSButton.MouseButton1Click:Connect(ToggleFPSBooster)
+
+-- ============ ВЫБОР СКАЙБОКСОВ (ВСЁ РАБОТАЕТ) ============
+-- Жёсткое удаление облаков (но без трогания скайбокса)
+local function RemoveClouds()
+    pcall(function()
+        local lighting = game:GetService("Lighting")
+        
+        -- Удаляем объекты облаков
+        if lighting:FindFirstChild("Clouds") then
+            lighting.Clouds:Destroy()
+        end
+        if lighting:FindFirstChild("Atmosphere") then
+            lighting.Atmosphere:Destroy()
+        end
+        
+        -- Отключаем через скрытые свойства
+        if sethiddenproperty then
+            sethiddenproperty(lighting, "CloudsEnabled", false)
+        end
+        
+        -- Удаляем физические облака из мира
+        for _, obj in pairs(workspace:GetDescendants()) do
+            if obj.Name and (obj.Name:lower():find("cloud") or obj.Name:lower():find("облак")) then
+                pcall(function() obj:Destroy() end)
+            end
+            if obj:IsA("ParticleEmitter") and obj.Name:lower():find("cloud") then
+                pcall(function() obj:Destroy() end)
+            end
+        end
+    end)
+end
+
+-- Скайбоксы
+local Skyboxes = {
+    {
+        Name = "🌌 PURPLE",
+        Assets = {
+            SkyboxBk = "rbxassetid://16553658937",
+            SkyboxDn = "rbxassetid://16553660713",
+            SkyboxFt = "rbxassetid://16553662144",
+            SkyboxLf = "rbxassetid://16553664042",
+            SkyboxRt = "rbxassetid://16553665766",
+            SkyboxUp = "rbxassetid://16553667750"
+        }
+    },
+    {
+        Name = "🌫️ GRAY",
+        Assets = {
+            SkyboxBk = "rbxassetid://2350402582",
+            SkyboxDn = "rbxassetid://2350402582",
+            SkyboxFt = "rbxassetid://2350402582",
+            SkyboxLf = "rbxassetid://2350402582",
+            SkyboxRt = "rbxassetid://2350402582",
+            SkyboxUp = "rbxassetid://2350402582"
+        }
+    },
+    {
+        Name = "🌍 REALISTIC",
+        Assets = {
+            SkyboxBk = "rbxassetid://6770309844",
+            SkyboxDn = "rbxassetid://6770307217",
+            SkyboxFt = "rbxassetid://6770309172",
+            SkyboxLf = "rbxassetid://6770308637",
+            SkyboxRt = "rbxassetid://6770306522",
+            SkyboxUp = "rbxassetid://88955670983612"
+        }
+    },
+    {
+        Name = "🌙 ANIME",
+        Assets = {
+            SkyboxBk = "rbxassetid://13107325341",
+            SkyboxDn = "rbxassetid://13107329809",
+            SkyboxFt = "rbxassetid://13107334845",
+            SkyboxLf = "rbxassetid://13107337703",
+            SkyboxRt = "rbxassetid://13107340396",
+            SkyboxUp = "rbxassetid://13107344387"
+        }
+    },
+    {
+        Name = "🌙 NIGHTLY",
+        Assets = {
+            SkyboxBk = "rbxassetid://17334213726",
+            SkyboxDn = "rbxassetid://17334213726",
+            SkyboxFt = "rbxassetid://17334213726",
+            SkyboxLf = "rbxassetid://17334213726",
+            SkyboxRt = "rbxassetid://17334213726",
+            SkyboxUp = "rbxassetid://17334213726"
+        }
+    }
+}
+
+-- Функция смены скайбокса
+local function ChangeSkybox(skyboxData)
+    pcall(function()
+        local lighting = game:GetService("Lighting")
+        
+        -- Удаляем старый скайбокс
+        local oldSky = lighting:FindFirstChild("Sky")
+        if oldSky then
+            oldSky:Destroy()
+        end
+        
+        -- Создаём новый скайбокс
+        local newSky = Instance.new("Sky")
+        newSky.SkyboxBk = skyboxData.Assets.SkyboxBk
+        newSky.SkyboxDn = skyboxData.Assets.SkyboxDn
+        newSky.SkyboxFt = skyboxData.Assets.SkyboxFt
+        newSky.SkyboxLf = skyboxData.Assets.SkyboxLf
+        newSky.SkyboxRt = skyboxData.Assets.SkyboxRt
+        newSky.SkyboxUp = skyboxData.Assets.SkyboxUp
+        newSky.Parent = lighting
+        
+        -- Убираем облака
+        RemoveClouds()
+        
+        print("[Skybox] Применён:", skyboxData.Name)
+        notify("Скайбокс", skyboxData.Name .. " ✓")
+    end)
+end
+
+-- Кнопка-триггер
+local SkyboxTrigger = Instance.new("TextButton")
+SkyboxTrigger.Size = UDim2.new(0.9, 0, 0, 30)
+SkyboxTrigger.Position = UDim2.new(0.05, 0, 0.112, 0)
+SkyboxTrigger.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
+SkyboxTrigger.BackgroundTransparency = 0.2
+SkyboxTrigger.BorderSizePixel = 0
+SkyboxTrigger.Text = "🎨 СКАЙБОКСЫ +"
+SkyboxTrigger.TextColor3 = Color3.fromRGB(255, 255, 255)
+SkyboxTrigger.Font = Enum.Font.GothamBold
+SkyboxTrigger.TextSize = 12
+SkyboxTrigger.Parent = GraphicsTab
+
+local SkyboxCorner = Instance.new("UICorner")
+SkyboxCorner.CornerRadius = UDim.new(0, 6)
+SkyboxCorner.Parent = SkyboxTrigger
+
+-- Контейнер для дропдауна
+local DropdownContainer = Instance.new("Frame")
+DropdownContainer.Size = UDim2.new(0.9, 0, 0, 0)
+DropdownContainer.Position = UDim2.new(0.05, 0, 0.182, 0)
+DropdownContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+DropdownContainer.BackgroundTransparency = 0.1
+DropdownContainer.BorderSizePixel = 0
+DropdownContainer.Visible = false
+DropdownContainer.ClipsDescendants = true
+DropdownContainer.Parent = GraphicsTab
+
+local DropdownCorner = Instance.new("UICorner")
+DropdownCorner.CornerRadius = UDim.new(0, 6)
+DropdownCorner.Parent = DropdownContainer
+
+local DropdownStroke = Instance.new("UIStroke")
+DropdownStroke.Thickness = 1
+DropdownStroke.Color = Color3.fromRGB(60, 60, 65)
+DropdownStroke.Transparency = 0.4
+DropdownStroke.Parent = DropdownContainer
+
+-- Анимация развертывания
+local function AnimateDropdown(open)
+    if open then
+        DropdownContainer.Visible = true
+        local targetHeight = #Skyboxes * 33 + 10
+        TweenService:Create(DropdownContainer, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0.9, 0, 0, targetHeight)
+        }):Play()
+    else
+        TweenService:Create(DropdownContainer, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+            Size = UDim2.new(0.9, 0, 0, 0)
+        }):Play()
+        task.wait(0.2)
+        DropdownContainer.Visible = false
+    end
+end
+
+-- Создаём кнопки в дропдауне
+local dropdownButtons = {}
+local function CreateDropdownButtons()
+    for _, btn in pairs(dropdownButtons) do
+        pcall(function() btn:Destroy() end)
+    end
+    dropdownButtons = {}
+    
+    local yOffset = 6
+    for i, skybox in ipairs(Skyboxes) do
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(1, -12, 0, 28)
+        btn.Position = UDim2.new(0, 6, 0, yOffset)
+        btn.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+        btn.BackgroundTransparency = 0.2
+        btn.BorderSizePixel = 0
+        btn.Text = skybox.Name
+        btn.TextColor3 = Color3.fromRGB(210, 210, 230)
+        btn.Font = Enum.Font.Gotham
+        btn.TextSize = 11
+        btn.Parent = DropdownContainer
+        
+        local btnCorner = Instance.new("UICorner")
+        btnCorner.CornerRadius = UDim.new(0, 4)
+        btnCorner.Parent = btn
+        
+        local isHovering = false
+        btn.MouseEnter:Connect(function()
+            if not isHovering then
+                isHovering = true
+                btn.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+                btn.BackgroundTransparency = 0.1
+            end
+        end)
+        
+        btn.MouseLeave:Connect(function()
+            if isHovering then
+                isHovering = false
+                btn.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+                btn.BackgroundTransparency = 0.2
+            end
+        end)
+        
+        btn.MouseButton1Click:Connect(function()
+            ChangeSkybox(skybox)
+            
+            local flash = Instance.new("Frame")
+            flash.Size = UDim2.new(1, 0, 1, 0)
+            flash.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            flash.BackgroundTransparency = 0.6
+            flash.BorderSizePixel = 0
+            flash.Parent = btn
+            local flashCorner = Instance.new("UICorner")
+            flashCorner.CornerRadius = UDim.new(0, 4)
+            flashCorner.Parent = flash
+            task.wait(0.15)
+            flash:Destroy()
+            
+            dropdownOpen = false
+            AnimateDropdown(false)
+            SkyboxTrigger.Text = "🎨 СКАЙБОКСЫ +"
+        end)
+        
+        table.insert(dropdownButtons, btn)
+        yOffset = yOffset + 33
+    end
+end
+
+local dropdownOpen = false
+SkyboxTrigger.MouseButton1Click:Connect(function()
+    dropdownOpen = not dropdownOpen
+    AnimateDropdown(dropdownOpen)
+    SkyboxTrigger.Text = dropdownOpen and "🎨 СКАЙБОКСЫ -" or "🎨 СКАЙБОКСЫ +"
+end)
+
+SkyboxTrigger.MouseEnter:Connect(function()
+    SkyboxTrigger.BackgroundColor3 = Color3.fromRGB(70, 70, 85)
+    SkyboxTrigger.BackgroundTransparency = 0.1
+end)
+
+SkyboxTrigger.MouseLeave:Connect(function()
+    SkyboxTrigger.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
+    SkyboxTrigger.BackgroundTransparency = 0.2
+end)
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if dropdownOpen and not gameProcessed and input.UserInputType == Enum.UserInputType.MouseButton1 then
+        task.wait(0.05)
+        local mousePos = UserInputService:GetMouseLocation()
+        local btnPos = SkyboxTrigger.AbsolutePosition
+        local btnSize = SkyboxTrigger.AbsoluteSize
+        local ddPos = DropdownContainer.AbsolutePosition
+        local ddSize = DropdownContainer.AbsoluteSize
+        
+        local clickedOnButton = (mousePos.X >= btnPos.X and mousePos.X <= btnPos.X + btnSize.X and
+                                 mousePos.Y >= btnPos.Y and mousePos.Y <= btnPos.Y + btnSize.Y)
+        local clickedOnDropdown = (ddPos and mousePos.X >= ddPos.X and mousePos.X <= ddPos.X + ddSize.X and
+                                   mousePos.Y >= ddPos.Y and mousePos.Y <= ddPos.Y + ddSize.Y)
+        
+        if not clickedOnButton and not clickedOnDropdown then
+            dropdownOpen = false
+            AnimateDropdown(false)
+            SkyboxTrigger.Text = "🎨 СКАЙБОКСЫ +"
+        end
+    end
+end)
+
+CreateDropdownButtons()
+
+-- ОДИН РАЗ удаляем облака при старте
+RemoveClouds()
+
+-- И добавляем наблюдателя, который будет удалять новые облака (но не трогать скайбокс)
+local cloudWatcher = workspace.DescendantAdded:Connect(function(obj)
+    task.wait(0.5)
+    if obj.Name and (obj.Name:lower():find("cloud") or obj.Name:lower():find("облак")) then
+        pcall(function() obj:Destroy() end)
+    end
+    if obj:IsA("ParticleEmitter") and obj.Name:lower():find("cloud") then
+        pcall(function() obj:Destroy() end)
+    end
+end)
+
+print("[Skybox] Всё работает: скайбокс меняется, облака удаляются, освещение нормальное")
+
 CloseButton.MouseButton1Click:Connect(function()
     StopFlinging()
     StopJerk()
+    RemoveTpTool()
     if antiFlingConnection1 then antiFlingConnection1:Disconnect() end
     if LocalAntiFlingConnection then LocalAntiFlingConnection:Disconnect() end
     for plr, data in pairs(AntiFlingDetection) do if data.Connection then data.Connection:Disconnect() end end
@@ -907,5 +1757,5 @@ end)
 
 RefreshPlayerList()
 UpdateStatus()
-notify("Fling System", "Loaded! Jerk toggles on/off, no auto-management")
-print("[Fling System] Loaded - Final Edition: белые кнопки, белый треугольник")
+notify("Fling System", "Loaded! Всё работает + вкладки Teleport/Graphics")
+print("[Fling System] COMPLETE - флинг, анти-флинг, джерк, тп тул, анимации, вкладки")

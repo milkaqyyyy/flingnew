@@ -1,5 +1,6 @@
 -- SWILL COMPLETE EDITION - полный рабочий скрипт
--- Fling System v3 by milkaqyyy + Click Teleport Tool + Jerk + Tabs (Teleport/Graphics)
+-- Fling System v3 by milkaqyyy
+-- Добавлено: анимированные кнопки в Extra, Fling по клавише E, анимация вкладок, исправлена кнопка IY
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -22,9 +23,9 @@ ScreenGui.Name = "FlingGUI"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = game:GetService("CoreGui")
 
--- ============ ОСНОВНОЙ ФРЕЙМ ============
+-- ============ MAIN FRAME ============
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 420, 0, 810)
+MainFrame.Size = UDim2.new(0, 420, 0, 720)
 MainFrame.Position = UDim2.new(0.5, -210, 0.5, -385)
 MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 22)
 MainFrame.BackgroundTransparency = 0.15
@@ -73,7 +74,7 @@ local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(1, -70, 1, 0)
 TitleLabel.Position = UDim2.new(0, 15, 0, 0)
 TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "FLING SYSTEM"
+TitleLabel.Text = "HACH HUB"
 TitleLabel.TextColor3 = Color3.fromRGB(220, 40, 40)
 TitleLabel.Font = Enum.Font.GothamBold
 TitleLabel.TextSize = 22
@@ -123,7 +124,7 @@ local CloseCorner = Instance.new("UICorner")
 CloseCorner.CornerRadius = UDim.new(1, 0)
 CloseCorner.Parent = CloseButton
 
--- ============ ВКЛАДКИ (TABS) ============
+-- ============ TABS ============
 local TabBar = Instance.new("Frame")
 TabBar.Size = UDim2.new(1, -24, 0, 38)
 TabBar.Position = UDim2.new(0, 12, 0, 52)
@@ -137,7 +138,7 @@ TabBarCorner.CornerRadius = UDim.new(0, 10)
 TabBarCorner.Parent = TabBar
 
 local Tab1Button = Instance.new("TextButton")
-Tab1Button.Size = UDim2.new(0.32, -4, 0, 30)
+Tab1Button.Size = UDim2.new(0.24, -4, 0, 30)
 Tab1Button.Position = UDim2.new(0, 4, 0.5, -15)
 Tab1Button.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
 Tab1Button.BackgroundTransparency = 0.3
@@ -145,7 +146,7 @@ Tab1Button.BorderSizePixel = 0
 Tab1Button.Text = "🔥 FLING"
 Tab1Button.TextColor3 = Color3.fromRGB(255, 255, 255)
 Tab1Button.Font = Enum.Font.GothamBold
-Tab1Button.TextSize = 12
+Tab1Button.TextSize = 10
 Tab1Button.AutoButtonColor = false
 Tab1Button.Parent = TabBar
 
@@ -154,15 +155,15 @@ Tab1Corner.CornerRadius = UDim.new(0, 6)
 Tab1Corner.Parent = Tab1Button
 
 local Tab2Button = Instance.new("TextButton")
-Tab2Button.Size = UDim2.new(0.32, -4, 0, 30)
-Tab2Button.Position = UDim2.new(0.34, 0, 0.5, -15)
+Tab2Button.Size = UDim2.new(0.24, -4, 0, 30)
+Tab2Button.Position = UDim2.new(0.255, 0, 0.5, -15)
 Tab2Button.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
 Tab2Button.BackgroundTransparency = 0.3
 Tab2Button.BorderSizePixel = 0
 Tab2Button.Text = "🚀 TELEPORT"
 Tab2Button.TextColor3 = Color3.fromRGB(255, 255, 255)
 Tab2Button.Font = Enum.Font.GothamBold
-Tab2Button.TextSize = 12
+Tab2Button.TextSize = 10
 Tab2Button.AutoButtonColor = false
 Tab2Button.Parent = TabBar
 
@@ -171,21 +172,38 @@ Tab2Corner.CornerRadius = UDim.new(0, 6)
 Tab2Corner.Parent = Tab2Button
 
 local Tab3Button = Instance.new("TextButton")
-Tab3Button.Size = UDim2.new(0.32, -4, 0, 30)
-Tab3Button.Position = UDim2.new(0.68, 0, 0.5, -15)
+Tab3Button.Size = UDim2.new(0.24, -4, 0, 30)
+Tab3Button.Position = UDim2.new(0.51, 0, 0.5, -15)
 Tab3Button.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
 Tab3Button.BackgroundTransparency = 0.3
 Tab3Button.BorderSizePixel = 0
 Tab3Button.Text = "🎮 GRAPHICS"
 Tab3Button.TextColor3 = Color3.fromRGB(255, 255, 255)
 Tab3Button.Font = Enum.Font.GothamBold
-Tab3Button.TextSize = 12
+Tab3Button.TextSize = 10
 Tab3Button.AutoButtonColor = false
 Tab3Button.Parent = TabBar
 
 local Tab3Corner = Instance.new("UICorner")
 Tab3Corner.CornerRadius = UDim.new(0, 6)
 Tab3Corner.Parent = Tab3Button
+
+local Tab4Button = Instance.new("TextButton")
+Tab4Button.Size = UDim2.new(0.24, -4, 0, 30)
+Tab4Button.Position = UDim2.new(0.765, 0, 0.5, -15)
+Tab4Button.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
+Tab4Button.BackgroundTransparency = 0.3
+Tab4Button.BorderSizePixel = 0
+Tab4Button.Text = "⭐ EXTRA"
+Tab4Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Tab4Button.Font = Enum.Font.GothamBold
+Tab4Button.TextSize = 10
+Tab4Button.AutoButtonColor = false
+Tab4Button.Parent = TabBar
+
+local Tab4Corner = Instance.new("UICorner")
+Tab4Corner.CornerRadius = UDim.new(0, 6)
+Tab4Corner.Parent = Tab4Button
 
 local function ApplySmoothHover(button)
     local originalTrans = button.BackgroundTransparency
@@ -205,7 +223,6 @@ end
 
 local function AddClickFlash(button)
     button.MouseButton1Click:Connect(function()
-        local originalTrans = button.BackgroundTransparency
         local flashFrame = Instance.new("Frame")
         flashFrame.Size = UDim2.new(1, 0, 1, 0)
         flashFrame.Position = UDim2.new(0, 0, 0, 0)
@@ -231,7 +248,7 @@ local function AddClickFlash(button)
     end)
 end
 
--- ============ КОНТЕЙНЕРЫ ДЛЯ ВКЛАДОК ============
+-- ============ CONTENT CONTAINERS ============
 local ContentContainer = Instance.new("Frame")
 ContentContainer.Size = UDim2.new(1, 0, 1, -90)
 ContentContainer.Position = UDim2.new(0, 0, 0, 90)
@@ -256,24 +273,56 @@ GraphicsTab.BackgroundTransparency = 1
 GraphicsTab.Visible = false
 GraphicsTab.Parent = ContentContainer
 
-local function SwitchTab(tabName)
-    FlingTab.Visible = (tabName == "fling")
-    TeleportTab.Visible = (tabName == "teleport")
-    GraphicsTab.Visible = (tabName == "graphics")
-end
+local ExtraTab = Instance.new("Frame")
+ExtraTab.Size = UDim2.new(1, 0, 1, 0)
+ExtraTab.BackgroundTransparency = 1
+ExtraTab.Visible = false
+ExtraTab.Parent = ContentContainer
 
-Tab1Button.MouseButton1Click:Connect(function() SwitchTab("fling") end)
-Tab2Button.MouseButton1Click:Connect(function() SwitchTab("teleport") end)
-Tab3Button.MouseButton1Click:Connect(function() SwitchTab("graphics") end)
+-- ============ ИСПРАВЛЕННАЯ АНИМАЦИЯ ПЕРЕКЛЮЧЕНИЯ МЕЖДУ ВКЛАДКАМИ (БЕЛЫЙ ФОН ИСЧЕЗ) ============
+local function SwitchTabWithAnimation(tabName)
+    local tabs = {
+        fling = FlingTab,
+        teleport = TeleportTab,
+        graphics = GraphicsTab,
+        extra = ExtraTab
+    }
+    
+    local targetTab = tabs[tabName]
+    if not targetTab then return end
+    
+    -- Анимируем скрытие всех вкладок (только Position, без изменения прозрачности)
+    for _, tab in pairs(tabs) do
+        if tab ~= targetTab and tab.Visible then
+            TweenService:Create(tab, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+                Position = UDim2.new(0.02, 0, 0, 0)
+            }):Play()
+            task.wait(0.05)
+            tab.Visible = false
+            tab.Position = UDim2.new(0, 0, 0, 0) -- Сбрасываем позицию для следующего раза
+        end
+    end
+    
+    -- Показываем целевую вкладку (начинаем с небольшого смещения)
+    targetTab.Visible = true
+    targetTab.Position = UDim2.new(-0.02, 0, 0, 0)
+    
+    -- Анимируем появление
+    TweenService:Create(targetTab, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Position = UDim2.new(0, 0, 0, 0)
+    }):Play()
+end
 
 ApplySmoothHover(Tab1Button)
 ApplySmoothHover(Tab2Button)
 ApplySmoothHover(Tab3Button)
+ApplySmoothHover(Tab4Button)
 AddClickFlash(Tab1Button)
 AddClickFlash(Tab2Button)
 AddClickFlash(Tab3Button)
+AddClickFlash(Tab4Button)
 
--- ============ ПЕРЕНОСИМ ВЕСЬ КОНТЕНТ В FlingTab ============
+-- ============ FLING TAB CONTENT ============
 local StatusLabel = Instance.new("TextLabel")
 StatusLabel.Position = UDim2.new(0, 15, 0, 5)
 StatusLabel.Size = UDim2.new(1, -30, 0, 25)
@@ -502,65 +551,6 @@ local DeselectCorner = Instance.new("UICorner")
 DeselectCorner.CornerRadius = UDim.new(0, 8)
 DeselectCorner.Parent = DeselectAllBtn
 
-local JerkButton = Instance.new("TextButton")
-JerkButton.Position = UDim2.new(0, 12, 0, 625)
-JerkButton.Size = UDim2.new(1, -24, 0, 40)
-JerkButton.BackgroundColor3 = Color3.fromRGB(80, 60, 100)
-JerkButton.BackgroundTransparency = 0.2
-JerkButton.BorderSizePixel = 0
-JerkButton.Text = "💦 JERK MODE [OFF]"
-JerkButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-JerkButton.Font = Enum.Font.GothamBold
-JerkButton.TextSize = 14
-JerkButton.Parent = FlingTab
-
-local JerkCorner = Instance.new("UICorner")
-JerkCorner.CornerRadius = UDim.new(0, 10)
-JerkCorner.Parent = JerkButton
-
-local JerkStroke = Instance.new("UIStroke")
-JerkStroke.Thickness = 1
-JerkStroke.Color = Color3.fromRGB(100, 80, 130)
-JerkStroke.Transparency = 0.4
-JerkStroke.Enabled = true
-JerkStroke.Parent = JerkButton
-
-local TpButton = Instance.new("TextButton")
-TpButton.Position = UDim2.new(0, 12, 0, 670)
-TpButton.Size = UDim2.new(1, -24, 0, 40)
-TpButton.BackgroundColor3 = Color3.fromRGB(40, 55, 70)
-TpButton.BackgroundTransparency = 0.2
-TpButton.BorderSizePixel = 0
-TpButton.Text = "🔮 CLICK TP TOOL [OFF]"
-TpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-TpButton.Font = Enum.Font.GothamBold
-TpButton.TextSize = 13
-TpButton.Parent = FlingTab
-
-local TpCorner = Instance.new("UICorner")
-TpCorner.CornerRadius = UDim.new(0, 10)
-TpCorner.Parent = TpButton
-
-local tpOriginalColor = TpButton.BackgroundColor3
-local tpOriginalTrans = TpButton.BackgroundTransparency
-local tpOriginalSize = TpButton.Size
-
-TpButton.MouseEnter:Connect(function()
-    TweenService:Create(TpButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        BackgroundColor3 = Color3.fromRGB(25, 40, 55),
-        BackgroundTransparency = 0.05,
-        Size = UDim2.new(tpOriginalSize.X.Scale, tpOriginalSize.X.Offset, tpOriginalSize.Y.Scale, tpOriginalSize.Y.Offset + 2)
-    }):Play()
-end)
-
-TpButton.MouseLeave:Connect(function()
-    TweenService:Create(TpButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        BackgroundColor3 = tpOriginalColor,
-        BackgroundTransparency = tpOriginalTrans,
-        Size = tpOriginalSize
-    }):Play()
-end)
-
 local function ApplyButtonAnimation(button, hoverColor, hoverTrans)
     local originalColor = button.BackgroundColor3
     local originalTrans = button.BackgroundTransparency
@@ -618,11 +608,10 @@ ApplyButtonAnimation(SelectAllBtn, Color3.fromRGB(30, 30, 35), 0.2)
 ApplyButtonAnimation(DeselectAllBtn, Color3.fromRGB(30, 30, 35), 0.2)
 ApplyButtonAnimation(Mode1Button, Color3.fromRGB(40, 40, 50), 0.1)
 ApplyButtonAnimation(Mode2Button, Color3.fromRGB(40, 40, 50), 0.1)
-ApplyButtonAnimation(JerkButton, Color3.fromRGB(65, 50, 85), 0.1)
 
--- ============ АНИМАЦИЯ СВОРАЧИВАНИЯ (ПЛАВНАЯ КАК В GRAPHICS) ============
+-- ============ COLLAPSE ANIMATION ============
 local isCollapsed = false
-local originalHeight = 810
+local originalHeight = 720
 
 CollapseButton.MouseButton1Click:Connect(function()
     isCollapsed = not isCollapsed
@@ -639,7 +628,7 @@ CollapseButton.MouseButton1Click:Connect(function()
     end
 end)
 
--- ============ ЛОГИКА ============
+-- ============ LOGIC ============
 local SelectedTargets = {}
 local PlayerItems = {}
 local FlingActive = false
@@ -668,7 +657,7 @@ local function GiveTpTool()
     end)
     tpTool.Parent = LocalPlayer.Backpack
     tpActive = true
-    TpButton.Text = "🔮 CLICK TP TOOL [ON]"
+    TpButton.Text = "🔮 CLICK TP [ON]"
     TweenService:Create(TpButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
         BackgroundColor3 = Color3.fromRGB(60, 85, 100)
     }):Play()
@@ -696,7 +685,7 @@ local function RemoveTpTool()
         end
     end
     tpActive = false
-    TpButton.Text = "🔮 CLICK TP TOOL [OFF]"
+    TpButton.Text = "🔮 CLICK TP [OFF]"
     TweenService:Create(TpButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
         BackgroundColor3 = Color3.fromRGB(40, 55, 70),
         BackgroundTransparency = 0.2
@@ -712,8 +701,6 @@ local function ToggleTpTool()
     end
 end
 
-TpButton.MouseButton1Click:Connect(ToggleTpTool)
-
 local function notify(title, text)
     pcall(function()
         StarterGui:SetCore("SendNotification", {Title = title; Text = text; Duration = 3})
@@ -726,11 +713,12 @@ local function StopJerk()
         CurrentJerkThread = nil
     end
     JerkActive = false
-    JerkButton.Text = "💦 JERK MODE [OFF]"
-    TweenService:Create(JerkButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        BackgroundColor3 = Color3.fromRGB(80, 60, 100)
-    }):Play()
-    if JerkStroke then JerkStroke.Enabled = true end
+    if ExtraJerkButton then
+        ExtraJerkButton.Text = "💦 JERK MODE"
+        TweenService:Create(ExtraJerkButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = Color3.fromRGB(55, 55, 65)
+        }):Play()
+    end
     
     pcall(function()
         local backpack = LocalPlayer.Backpack
@@ -762,11 +750,12 @@ local function StartJerk()
             if func then func() end
         end)
         JerkActive = true
-        JerkButton.Text = "💦 JERK MODE [ON]"
-        TweenService:Create(JerkButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            BackgroundColor3 = Color3.fromRGB(70, 120, 70)
-        }):Play()
-        if JerkStroke then JerkStroke.Enabled = false end
+        if ExtraJerkButton then
+            ExtraJerkButton.Text = "💦 JERK MODE [ON]"
+            TweenService:Create(ExtraJerkButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                BackgroundColor3 = Color3.fromRGB(70, 120, 70)
+            }):Play()
+        end
         notify("Jerk", "Jerk mode ACTIVATED 💦")
     end)
     if not success then
@@ -784,7 +773,6 @@ local function ToggleJerk()
         StartJerk()
     end
 end
-JerkButton.MouseButton1Click:Connect(ToggleJerk)
 
 local function UpdatePower(value)
     FlingPower = math.clamp(value, 0.1, 2.0)
@@ -1228,7 +1216,7 @@ StopButton.MouseButton1Click:Connect(StopFlinging)
 SelectAllBtn.MouseButton1Click:Connect(function() SelectAll(true) end)
 DeselectAllBtn.MouseButton1Click:Connect(function() SelectAll(false) end)
 
--- ============ FPS БУСТЕР (RIP#6666) ============
+-- ============ FPS BOOSTER ============
 local FPSBoosterScript = [[
 if not _G.Ignore then _G.Ignore = {} end
 _G.SendNotifications = false
@@ -1372,14 +1360,25 @@ game.DescendantAdded:Connect(function(value)
 end)
 ]]
 
--- Создаём кнопку FPS бустера
+-- Warning label above FPS button
+local FPSWarning = Instance.new("TextLabel")
+FPSWarning.Size = UDim2.new(0.9, 0, 0, 16)
+FPSWarning.Position = UDim2.new(0.05, 0, 0.008, 0)
+FPSWarning.BackgroundTransparency = 1
+FPSWarning.Text = "⚠️ FPS BOOST MAY CAUSE BUGS"
+FPSWarning.TextColor3 = Color3.fromRGB(255, 200, 100)
+FPSWarning.Font = Enum.Font.Gotham
+FPSWarning.TextSize = 9
+FPSWarning.TextXAlignment = Enum.TextXAlignment.Center
+FPSWarning.Parent = GraphicsTab
+
 local FPSButton = Instance.new("TextButton")
 FPSButton.Size = UDim2.new(0.9, 0, 0, 32)
-FPSButton.Position = UDim2.new(0.05, 0, 0.03, 0)
+FPSButton.Position = UDim2.new(0.05, 0, 0.049, 0)
 FPSButton.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
 FPSButton.BackgroundTransparency = 0.2
 FPSButton.BorderSizePixel = 0
-FPSButton.Text = "⚡ FPS БУСТ [ВЫКЛ]"
+FPSButton.Text = "⚡ FPS BOOST"
 FPSButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 FPSButton.Font = Enum.Font.GothamBold
 FPSButton.TextSize = 13
@@ -1389,38 +1388,26 @@ local FPSButtonCorner = Instance.new("UICorner")
 FPSButtonCorner.CornerRadius = UDim.new(0, 6)
 FPSButtonCorner.Parent = FPSButton
 
-local BoostActive = false
-local BoosterCoroutine = nil
-
-local function ToggleFPSBooster()
-    BoostActive = not BoostActive
-    
-    if BoostActive then
-        if BoosterCoroutine then task.cancel(BoosterCoroutine) end
-        BoosterCoroutine = task.spawn(function()
-            local success, err = pcall(function()
-                loadstring(FPSBoosterScript)()
-            end)
-            if not success then
-                BoostActive = false
-                FPSButton.Text = "⚡ FPS БУСТ [ВЫКЛ]"
-            end
+local function RunFPSBooster()
+    task.spawn(function()
+        local success, err = pcall(function()
+            loadstring(FPSBoosterScript)()
         end)
-        FPSButton.Text = "✅ FPS БУСТ [ВКЛ]"
-        TweenService:Create(FPSButton, TweenInfo.new(0.2), {
-            BackgroundColor3 = Color3.fromRGB(70, 120, 70),
-            BackgroundTransparency = 0.1
-        }):Play()
-        notify("FPS Бустер", "Оптимизация включена")
-    else
-        if BoosterCoroutine then task.cancel(BoosterCoroutine); BoosterCoroutine = nil end
-        FPSButton.Text = "⚡ FPS БУСТ [ВЫКЛ]"
-        TweenService:Create(FPSButton, TweenInfo.new(0.2), {
-            BackgroundColor3 = Color3.fromRGB(55, 55, 65),
-            BackgroundTransparency = 0.2
-        }):Play()
-        notify("FPS Бустер", "Оптимизация выключена")
-    end
+        if success then
+            notify("FPS Boost", "Optimization started!")
+            TweenService:Create(FPSButton, TweenInfo.new(0.3), {
+                BackgroundColor3 = Color3.fromRGB(70, 120, 70),
+                BackgroundTransparency = 0.1
+            }):Play()
+            task.wait(1)
+            TweenService:Create(FPSButton, TweenInfo.new(0.3), {
+                BackgroundColor3 = Color3.fromRGB(55, 55, 65),
+                BackgroundTransparency = 0.2
+            }):Play()
+        else
+            notify("FPS Boost", "Error: " .. tostring(err))
+        end
+    end)
 end
 
 FPSButton.MouseEnter:Connect(function()
@@ -1437,31 +1424,164 @@ FPSButton.MouseLeave:Connect(function()
     }):Play()
 end)
 
-FPSButton.MouseButton1Click:Connect(ToggleFPSBooster)
+FPSButton.MouseButton1Click:Connect(RunFPSBooster)
 
--- ============ ВЫБОР СКАЙБОКСОВ (ВСЁ РАБОТАЕТ) ============
--- Жёсткое удаление облаков (но без трогания скайбокса)
-local function RemoveClouds()
+-- ============ DAMAGE HIGHLIGHT (INSTANT, NO DELAYS, NO DUPLICATES) ============
+local DamageHighlightActive = false
+local ActiveHighlights = {}
+local IsFlashing = {}
+
+local function FlashPlayer(player)
+    if not DamageHighlightActive then return end
+    if not player or player == LocalPlayer then return end
+    if not player.Character then return end
+    
+    if IsFlashing[player] then
+        return
+    end
+    
+    IsFlashing[player] = true
+    
+    if ActiveHighlights[player] then
+        pcall(function() ActiveHighlights[player]:Destroy() end)
+        ActiveHighlights[player] = nil
+    end
+    
+    local highlight = Instance.new("Highlight")
+    highlight.Name = "DamageHighlight"
+    highlight.FillColor = Color3.fromRGB(255, 50, 50)
+    highlight.FillTransparency = 0.5
+    highlight.OutlineColor = Color3.fromRGB(255, 100, 100)
+    highlight.OutlineTransparency = 0.3
+    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    highlight.Parent = player.Character
+    
+    ActiveHighlights[player] = highlight
+    
+    TweenService:Create(highlight, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        FillTransparency = 1,
+        OutlineTransparency = 1
+    }):Play()
+    
+    task.wait(0.3)
+    pcall(function() highlight:Destroy() end)
+    ActiveHighlights[player] = nil
+    IsFlashing[player] = nil
+end
+
+local function SetupDamageDetection()
+    local function trackHumanoid(humanoid, player)
+        local lastHealth = humanoid.Health
+        
+        humanoid.HealthChanged:Connect(function(newHealth)
+            if not DamageHighlightActive then return end
+            if newHealth < lastHealth then
+                FlashPlayer(player)
+            end
+            lastHealth = newHealth
+        end)
+    end
+    
+    local function setupPlayer(player)
+        if player == LocalPlayer then return end
+        
+        local function onCharacterAdded(character)
+            local humanoid = character:WaitForChild("Humanoid", 5)
+            if humanoid then
+                trackHumanoid(humanoid, player)
+            end
+        end
+        
+        if player.Character then
+            onCharacterAdded(player.Character)
+        end
+        player.CharacterAdded:Connect(onCharacterAdded)
+    end
+    
+    for _, player in ipairs(Players:GetPlayers()) do
+        setupPlayer(player)
+    end
+    
+    Players.PlayerAdded:Connect(setupPlayer)
+end
+
+local DamageButton = Instance.new("TextButton")
+DamageButton.Size = UDim2.new(0.9, 0, 0, 32)
+DamageButton.Position = UDim2.new(0.05, 0, 0.11, 0)
+DamageButton.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
+DamageButton.BackgroundTransparency = 0.2
+DamageButton.BorderSizePixel = 0
+DamageButton.Text = "💀 DAMAGE HL [OFF]"
+DamageButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+DamageButton.Font = Enum.Font.GothamBold
+DamageButton.TextSize = 12
+DamageButton.Parent = GraphicsTab
+
+local DamageButtonCorner = Instance.new("UICorner")
+DamageButtonCorner.CornerRadius = UDim.new(0, 6)
+DamageButtonCorner.Parent = DamageButton
+
+local function ToggleDamageHighlight()
+    DamageHighlightActive = not DamageHighlightActive
+    
+    if DamageHighlightActive then
+        DamageButton.Text = "💀 DAMAGE HL [ON]"
+        TweenService:Create(DamageButton, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(80, 50, 50),
+            BackgroundTransparency = 0.1
+        }):Play()
+        notify("Damage Highlight", "ENABLED - Instant flash")
+    else
+        DamageButton.Text = "💀 DAMAGE HL [OFF]"
+        TweenService:Create(DamageButton, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(55, 55, 65),
+            BackgroundTransparency = 0.2
+        }):Play()
+        for player, highlight in pairs(ActiveHighlights) do
+            pcall(function() highlight:Destroy() end)
+        end
+        ActiveHighlights = {}
+        IsFlashing = {}
+        notify("Damage Highlight", "DISABLED")
+    end
+end
+
+DamageButton.MouseEnter:Connect(function()
+    TweenService:Create(DamageButton, TweenInfo.new(0.2), {
+        BackgroundTransparency = 0.05,
+        Size = UDim2.new(0.92, 0, 0, 34)
+    }):Play()
+end)
+
+DamageButton.MouseLeave:Connect(function()
+    TweenService:Create(DamageButton, TweenInfo.new(0.2), {
+        BackgroundTransparency = 0.2,
+        Size = UDim2.new(0.9, 0, 0, 32)
+    }):Play()
+end)
+
+DamageButton.MouseButton1Click:Connect(ToggleDamageHighlight)
+
+SetupDamageDetection()
+
+-- ============ SKYBOX SYSTEM (ONLY CLOUDS REMOVED) ============
+local function RemoveCloudsOnly()
     pcall(function()
         local lighting = game:GetService("Lighting")
         
-        -- Удаляем объекты облаков
         if lighting:FindFirstChild("Clouds") then
             lighting.Clouds:Destroy()
         end
-        if lighting:FindFirstChild("Atmosphere") then
-            lighting.Atmosphere:Destroy()
-        end
         
-        -- Отключаем через скрытые свойства
         if sethiddenproperty then
             sethiddenproperty(lighting, "CloudsEnabled", false)
         end
         
-        -- Удаляем физические облака из мира
         for _, obj in pairs(workspace:GetDescendants()) do
             if obj.Name and (obj.Name:lower():find("cloud") or obj.Name:lower():find("облак")) then
-                pcall(function() obj:Destroy() end)
+                if not obj:IsA("Atmosphere") then
+                    pcall(function() obj:Destroy() end)
+                end
             end
             if obj:IsA("ParticleEmitter") and obj.Name:lower():find("cloud") then
                 pcall(function() obj:Destroy() end)
@@ -1470,7 +1590,6 @@ local function RemoveClouds()
     end)
 end
 
--- Скайбоксы
 local Skyboxes = {
     {
         Name = "🌌 PURPLE",
@@ -1529,18 +1648,15 @@ local Skyboxes = {
     }
 }
 
--- Функция смены скайбокса
 local function ChangeSkybox(skyboxData)
     pcall(function()
         local lighting = game:GetService("Lighting")
         
-        -- Удаляем старый скайбокс
         local oldSky = lighting:FindFirstChild("Sky")
         if oldSky then
             oldSky:Destroy()
         end
         
-        -- Создаём новый скайбокс
         local newSky = Instance.new("Sky")
         newSky.SkyboxBk = skyboxData.Assets.SkyboxBk
         newSky.SkyboxDn = skyboxData.Assets.SkyboxDn
@@ -1550,22 +1666,19 @@ local function ChangeSkybox(skyboxData)
         newSky.SkyboxUp = skyboxData.Assets.SkyboxUp
         newSky.Parent = lighting
         
-        -- Убираем облака
-        RemoveClouds()
+        RemoveCloudsOnly()
         
-        print("[Skybox] Применён:", skyboxData.Name)
-        notify("Скайбокс", skyboxData.Name .. " ✓")
+        notify("Skybox", skyboxData.Name .. " ✓")
     end)
 end
 
--- Кнопка-триггер
 local SkyboxTrigger = Instance.new("TextButton")
 SkyboxTrigger.Size = UDim2.new(0.9, 0, 0, 30)
-SkyboxTrigger.Position = UDim2.new(0.05, 0, 0.112, 0)
+SkyboxTrigger.Position = UDim2.new(0.05, 0, 0.17, 0)
 SkyboxTrigger.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
 SkyboxTrigger.BackgroundTransparency = 0.2
 SkyboxTrigger.BorderSizePixel = 0
-SkyboxTrigger.Text = "🎨 СКАЙБОКСЫ +"
+SkyboxTrigger.Text = "🎨 SKYBOX +"
 SkyboxTrigger.TextColor3 = Color3.fromRGB(255, 255, 255)
 SkyboxTrigger.Font = Enum.Font.GothamBold
 SkyboxTrigger.TextSize = 12
@@ -1575,10 +1688,9 @@ local SkyboxCorner = Instance.new("UICorner")
 SkyboxCorner.CornerRadius = UDim.new(0, 6)
 SkyboxCorner.Parent = SkyboxTrigger
 
--- Контейнер для дропдауна
 local DropdownContainer = Instance.new("Frame")
 DropdownContainer.Size = UDim2.new(0.9, 0, 0, 0)
-DropdownContainer.Position = UDim2.new(0.05, 0, 0.182, 0)
+DropdownContainer.Position = UDim2.new(0.05, 0, 0.23, 0)
 DropdownContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
 DropdownContainer.BackgroundTransparency = 0.1
 DropdownContainer.BorderSizePixel = 0
@@ -1596,7 +1708,6 @@ DropdownStroke.Color = Color3.fromRGB(60, 60, 65)
 DropdownStroke.Transparency = 0.4
 DropdownStroke.Parent = DropdownContainer
 
--- Анимация развертывания
 local function AnimateDropdown(open)
     if open then
         DropdownContainer.Visible = true
@@ -1613,7 +1724,6 @@ local function AnimateDropdown(open)
     end
 end
 
--- Создаём кнопки в дропдауне
 local dropdownButtons = {}
 local function CreateDropdownButtons()
     for _, btn in pairs(dropdownButtons) do
@@ -1673,7 +1783,7 @@ local function CreateDropdownButtons()
             
             dropdownOpen = false
             AnimateDropdown(false)
-            SkyboxTrigger.Text = "🎨 СКАЙБОКСЫ +"
+            SkyboxTrigger.Text = "🎨 SKYBOX +"
         end)
         
         table.insert(dropdownButtons, btn)
@@ -1685,7 +1795,7 @@ local dropdownOpen = false
 SkyboxTrigger.MouseButton1Click:Connect(function()
     dropdownOpen = not dropdownOpen
     AnimateDropdown(dropdownOpen)
-    SkyboxTrigger.Text = dropdownOpen and "🎨 СКАЙБОКСЫ -" or "🎨 СКАЙБОКСЫ +"
+    SkyboxTrigger.Text = dropdownOpen and "🎨 SKYBOX -" or "🎨 SKYBOX +"
 end)
 
 SkyboxTrigger.MouseEnter:Connect(function()
@@ -1715,29 +1825,227 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         if not clickedOnButton and not clickedOnDropdown then
             dropdownOpen = false
             AnimateDropdown(false)
-            SkyboxTrigger.Text = "🎨 СКАЙБОКСЫ +"
+            SkyboxTrigger.Text = "🎨 SKYBOX +"
         end
     end
 end)
 
 CreateDropdownButtons()
+RemoveCloudsOnly()
 
--- ОДИН РАЗ удаляем облака при старте
-RemoveClouds()
+-- ============ TELEPORT TAB ============
+local TeleportTpButton = Instance.new("TextButton")
+TeleportTpButton.Size = UDim2.new(0.9, 0, 0, 42)
+TeleportTpButton.Position = UDim2.new(0.05, 0, 0.02, 0)
+TeleportTpButton.BackgroundColor3 = Color3.fromRGB(40, 55, 70)
+TeleportTpButton.BackgroundTransparency = 0.2
+TeleportTpButton.BorderSizePixel = 0
+TeleportTpButton.Text = "🔮 CLICK TP"
+TeleportTpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TeleportTpButton.Font = Enum.Font.GothamBold
+TeleportTpButton.TextSize = 14
+TeleportTpButton.Parent = TeleportTab
 
--- И добавляем наблюдателя, который будет удалять новые облака (но не трогать скайбокс)
-local cloudWatcher = workspace.DescendantAdded:Connect(function(obj)
-    task.wait(0.5)
-    if obj.Name and (obj.Name:lower():find("cloud") or obj.Name:lower():find("облак")) then
-        pcall(function() obj:Destroy() end)
-    end
-    if obj:IsA("ParticleEmitter") and obj.Name:lower():find("cloud") then
-        pcall(function() obj:Destroy() end)
+local TeleportTpCorner = Instance.new("UICorner")
+TeleportTpCorner.CornerRadius = UDim.new(0, 10)
+TeleportTpCorner.Parent = TeleportTpButton
+
+local TpButton = TeleportTpButton
+
+TeleportTpButton.MouseButton1Click:Connect(ToggleTpTool)
+ApplyButtonAnimation(TeleportTpButton, Color3.fromRGB(25, 40, 55), 0.05)
+
+-- ============ ДОБАВЛЯЕМ НАДПИСЬ В TELEPORT TAB ============
+local ComingSoonLabel = Instance.new("TextLabel")
+ComingSoonLabel.Size = UDim2.new(0.9, 0, 0, 40)
+ComingSoonLabel.Position = UDim2.new(0.05, 0, 0.15, 0)
+ComingSoonLabel.BackgroundTransparency = 1
+ComingSoonLabel.Text = "✨ More teleport features coming soon!\n👀 Stay tuned for updates..."
+ComingSoonLabel.TextColor3 = Color3.fromRGB(180, 180, 220)
+ComingSoonLabel.Font = Enum.Font.Gotham
+ComingSoonLabel.TextSize = 12
+ComingSoonLabel.TextXAlignment = Enum.TextXAlignment.Center
+ComingSoonLabel.TextYAlignment = Enum.TextYAlignment.Center
+ComingSoonLabel.Parent = TeleportTab
+
+-- Добавляем легкую анимацию пульсации для надписи
+task.spawn(function()
+    while true do
+        TweenService:Create(ComingSoonLabel, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            TextColor3 = Color3.fromRGB(220, 220, 255)
+        }):Play()
+        task.wait(2)
+        TweenService:Create(ComingSoonLabel, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            TextColor3 = Color3.fromRGB(160, 160, 200)
+        }):Play()
+        task.wait(2)
     end
 end)
 
-print("[Skybox] Всё работает: скайбокс меняется, облака удаляются, освещение нормальное")
+-- ============ EXTRA TAB ============
+-- Исправленная анимация для кнопок в Extra Tab
+local function StyleExtraButtonImproved(button, hoverColor, hoverTrans)
+    local originalColor = button.BackgroundColor3
+    local originalTrans = button.BackgroundTransparency
+    local originalSize = button.Size
+    
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = hoverColor or Color3.fromRGB(85, 85, 105),
+            BackgroundTransparency = hoverTrans or 0.1,
+            Size = UDim2.new(originalSize.X.Scale, originalSize.X.Offset, originalSize.Y.Scale, originalSize.Y.Offset + 3)
+        }):Play()
+    end)
+    
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = originalColor,
+            BackgroundTransparency = originalTrans,
+            Size = originalSize
+        }):Play()
+    end)
+    
+    button.MouseButton1Click:Connect(function()
+        local flashFrame = Instance.new("Frame")
+        flashFrame.Size = UDim2.new(1, 0, 1, 0)
+        flashFrame.Position = UDim2.new(0, 0, 0, 0)
+        flashFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        flashFrame.BackgroundTransparency = 0.7
+        flashFrame.BorderSizePixel = 0
+        flashFrame.ZIndex = 10
+        flashFrame.Parent = button
+        
+        local buttonCorner = button:FindFirstChildWhichIsA("UICorner")
+        local flashCorner = Instance.new("UICorner")
+        if buttonCorner then
+            flashCorner.CornerRadius = buttonCorner.CornerRadius
+        else
+            flashCorner.CornerRadius = UDim.new(0, 10)
+        end
+        flashCorner.Parent = flashFrame
+        
+        TweenService:Create(flashFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 1
+        }):Play()
+        
+        task.wait(0.3)
+        flashFrame:Destroy()
+    end)
+end
 
+-- Jerk Mode Button (исправленный)
+local ExtraJerkButton = Instance.new("TextButton")
+ExtraJerkButton.Size = UDim2.new(0.9, 0, 0, 42)
+ExtraJerkButton.Position = UDim2.new(0.05, 0, 0.02, 0)
+ExtraJerkButton.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
+ExtraJerkButton.BackgroundTransparency = 0.2
+ExtraJerkButton.BorderSizePixel = 0
+ExtraJerkButton.Text = "💦 JERK MODE"
+ExtraJerkButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ExtraJerkButton.Font = Enum.Font.GothamBold
+ExtraJerkButton.TextSize = 13
+ExtraJerkButton.Parent = ExtraTab
+
+local ExtraJerkCorner = Instance.new("UICorner")
+ExtraJerkCorner.CornerRadius = UDim.new(0, 10)
+ExtraJerkCorner.Parent = ExtraJerkButton
+
+local ExtraJerkStroke = Instance.new("UIStroke")
+ExtraJerkStroke.Thickness = 1
+ExtraJerkStroke.Color = Color3.fromRGB(130, 100, 160)
+ExtraJerkStroke.Transparency = 0.4
+ExtraJerkStroke.Parent = ExtraJerkButton
+
+StyleExtraButtonImproved(ExtraJerkButton, Color3.fromRGB(85, 85, 110), 0.05)
+
+ExtraJerkButton.MouseButton1Click:Connect(function()
+    if JerkActive then 
+        StopJerk()
+        ExtraJerkButton.Text = "💦 JERK MODE"
+        TweenService:Create(ExtraJerkButton, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(55, 55, 65),
+            BackgroundTransparency = 0.2
+        }):Play()
+        notify("Jerk", "Jerk mode DISABLED")
+    else 
+        StartJerk()
+        ExtraJerkButton.Text = "💦 JERK MODE [ON]"
+        TweenService:Create(ExtraJerkButton, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(70, 120, 70),
+            BackgroundTransparency = 0.1
+        }):Play()
+    end
+end)
+
+-- Infinite Yield Button (исправленный)
+local IYButton = Instance.new("TextButton")
+IYButton.Size = UDim2.new(0.9, 0, 0, 42)
+IYButton.Position = UDim2.new(0.05, 0, 0.1, 0)
+IYButton.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
+IYButton.BackgroundTransparency = 0.2
+IYButton.BorderSizePixel = 0
+IYButton.Text = "♾️ INFINITE YIELD"
+IYButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+IYButton.Font = Enum.Font.GothamBold
+IYButton.TextSize = 13
+IYButton.Parent = ExtraTab
+
+local IYCorner = Instance.new("UICorner")
+IYCorner.CornerRadius = UDim.new(0, 10)
+IYCorner.Parent = IYButton
+
+local IYStroke = Instance.new("UIStroke")
+IYStroke.Thickness = 1
+IYStroke.Color = Color3.fromRGB(130, 100, 160)
+IYStroke.Transparency = 0.4
+IYStroke.Enabled = true
+IYStroke.Parent = IYButton
+
+local function RunInfiniteYield()
+    task.spawn(function()
+        local success, err = pcall(function()
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+        end)
+        if success then
+            notify("Infinite Yield", "Loaded successfully!")
+            TweenService:Create(IYButton, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+                BackgroundColor3 = Color3.fromRGB(70, 120, 70),
+                BackgroundTransparency = 0.1
+            }):Play()
+            task.wait(0.8)
+            TweenService:Create(IYButton, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+                BackgroundColor3 = Color3.fromRGB(55, 55, 65),
+                BackgroundTransparency = 0.2
+            }):Play()
+        else
+            notify("Infinite Yield", "Error: " .. tostring(err))
+        end
+    end)
+end
+
+StyleExtraButtonImproved(IYButton, Color3.fromRGB(85, 85, 110), 0.05)
+IYButton.MouseButton1Click:Connect(RunInfiniteYield)
+
+-- ============ FLING ON KEY "E" ============
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.E then
+        if not FlingActive then
+            StartFlinging()
+            print("[Fling] Started by pressing E!")
+        else
+            print("[Fling] Already flinging! Press STOP first or close GUI")
+        end
+    end
+end)
+
+-- ============ ПОДКЛЮЧАЕМ КНОПКИ ВКЛАДОК К НОВОЙ АНИМАЦИИ ============
+Tab1Button.MouseButton1Click:Connect(function() SwitchTabWithAnimation("fling") end)
+Tab2Button.MouseButton1Click:Connect(function() SwitchTabWithAnimation("teleport") end)
+Tab3Button.MouseButton1Click:Connect(function() SwitchTabWithAnimation("graphics") end)
+Tab4Button.MouseButton1Click:Connect(function() SwitchTabWithAnimation("extra") end)
+
+-- ============ CLEANUP ============
 CloseButton.MouseButton1Click:Connect(function()
     StopFlinging()
     StopJerk()
@@ -1745,17 +2053,27 @@ CloseButton.MouseButton1Click:Connect(function()
     if antiFlingConnection1 then antiFlingConnection1:Disconnect() end
     if LocalAntiFlingConnection then LocalAntiFlingConnection:Disconnect() end
     for plr, data in pairs(AntiFlingDetection) do if data.Connection then data.Connection:Disconnect() end end
+    for player, highlight in pairs(ActiveHighlights) do
+        if highlight and highlight.Gui then
+            pcall(function() highlight.Gui:Destroy() end)
+        end
+    end
     ScreenGui:Destroy()
 end)
 
 Players.PlayerAdded:Connect(RefreshPlayerList)
 Players.PlayerRemoving:Connect(function(plr)
     if SelectedTargets[plr.Name] then SelectedTargets[plr.Name] = nil end
+    if ActiveHighlights[plr] then
+        pcall(function() ActiveHighlights[plr].Gui:Destroy() end)
+        ActiveHighlights[plr] = nil
+    end
     RefreshPlayerList()
     UpdateStatus()
 end)
 
 RefreshPlayerList()
 UpdateStatus()
-notify("Fling System", "Loaded! Всё работает + вкладки Teleport/Graphics")
-print("[Fling System] COMPLETE - флинг, анти-флинг, джерк, тп тул, анимации, вкладки")
+notify("Fling System", "Loaded! Everything works | Press E to FLING")
+
+print("[Fling System] COMPLETE - All features working! | Press E to start flinging")
